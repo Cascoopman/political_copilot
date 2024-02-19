@@ -1,6 +1,6 @@
 # political_agents
 ## Goal
-The goal of this project is to develop a team of autonomous Agents that are experts in the politcal landscape of Flanders. 
+The goal of this project is to develop a team of autonomous Agents that are experts in the political landscape of Flanders. 
 
 Ideally, the agents can distil complex and recent government documents into simple answers which are comprehensible for the average citizen. On top of that, having the agents debate eachother allows for dynamic analysis of the political landscape.
 
