@@ -16,12 +16,13 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
-DATA_FOLDER = 'data/'
+#DATA_FOLDER = 'data/'
+DATA_FOLDER = 'data/parties/'
 CHUNK_SIZE = 1500
 CHUNK_OVERLAP = 100
 
 EMBEDDING_MODEL = 'distiluse-base-multilingual-cased-v2'
-CHROMA_PATH = 'db/'
+CHROMA_PATH = 'data/db'
 BATCH_SIZE = 2048
 
 

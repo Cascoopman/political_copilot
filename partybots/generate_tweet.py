@@ -6,12 +6,15 @@ import dotenv
 import chromadb
 from chromadb.utils import embedding_functions
 
-import openai
+#import openai
+import ollama
+#MODEL_NAME='mistral'
+MODEL_NAME='llama2:7b-chat'
 
-from . import prompts
+import prompts
 
 # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 # Create a logger
 logger = logging.getLogger(__name__)
@@ -23,9 +26,9 @@ CHROMA_CLIENT = chromadb.PersistentClient(path=os.environ.get('CHROMA_PATH'))
 EMBEDDING_FUNCTION = embedding_functions.SentenceTransformerEmbeddingFunction(
     model_name=os.environ.get('EMBEDDING_MODEL')
 )
-OPENAI_CLIENT = openai.OpenAI(
-    api_key=os.environ.get('OPENAPI_KEY')
-)
+#OPENAI_CLIENT = openai.OpenAI(
+#    api_key=os.environ.get('OPENAPI_KEY')
+#)
 
 PARTIES = {
     'nva': 'N-VA',
@@ -67,6 +70,7 @@ def read_file_into_string(newsfile: str) -> str:
         logger.error(f"File '{newsfile}' not found.")
         return ''
 
+""""
 def get_openai_response(prompt: str) -> str:
     openai_completion = OPENAI_CLIENT.chat.completions.create(
         messages=[
@@ -80,6 +84,7 @@ def get_openai_response(prompt: str) -> str:
     )
 
     return openai_completion
+"""
 
 def clean_response_text(response: str) -> str:
     if response.endswith('"') and response.startswith('"'):
@@ -112,26 +117,51 @@ def run(newsfile: str, party: str, n: int):
     )
 
     chroma_contexts = '\n'.join(chroma_results['documents'][0])
-
+    print(chroma_contexts)
     press_release_prompt = prompts.create_press_release_prompt(
         POLITICIANS[party], PARTIES[party], query, chroma_contexts
     )
     logger.info(f"\nWaiting...")
+    
+    # query OpenAI here
+    """
     press_release_completion = get_openai_response(press_release_prompt)
     press_release = press_release_completion.choices[0].message.content
+    """
+    
+    # query local LLM here
+    press_release_completion = ollama.chat(model=MODEL_NAME, messages=[
+        {
+            'role': 'user',
+            'content': press_release_prompt,
+        }
+    ])
+    press_release = press_release_completion['message']['content']
+    #print(press_release)
     logger.debug(f"Press release statement:\n{press_release}")
-
+    
     twitter_prompt = prompts.create_twitter_prompt(
         POLITICIANS[party], PARTIES[party], PROMPTS[party], query, press_release
     )
 
     for iteration in range(n):
         logger.info(f"\nWaiting...")
-        tweet_completion = get_openai_response(twitter_prompt)
-        tweet = tweet_completion.choices[0].message.content
+        #tweet_completion = get_openai_response(twitter_prompt)
+        #tweet = tweet_completion.choices[0].message.content
+        tweet_completion = ollama.chat(model=MODEL_NAME, messages=[
+        {
+            'role': 'user',
+            'content': twitter_prompt,
+        }
+        ])
+        tweet = tweet_completion['message']['content']
+        
         tweet = clean_response_text(tweet)
+        
         logger.info(f"Tweet {iteration + 1}:\n{tweet}")
-
+        print(f"Tweet {iteration + 1}:\n{tweet}")
+        print(tweet)
+    
     logger.info(f"\nDone.")
 
 
