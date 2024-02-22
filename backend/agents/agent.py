@@ -1,5 +1,6 @@
 import autogen
 
+# LLM parameters
 config_list = autogen.config_list_from_json(env_or_file="OAI_CONFIG_LIST.json")
 
 llm_config={
@@ -9,7 +10,7 @@ llm_config={
     "temperature": 0,
 }
 
-# Declaring the assistant and the Agent
+# Declaring the assistant and the Agent (Same LLM config)
 
 assistant = autogen.AssistantAgent(
     name="assistant",
