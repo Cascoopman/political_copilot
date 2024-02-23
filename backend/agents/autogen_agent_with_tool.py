@@ -39,7 +39,6 @@ user_proxy = autogen.UserProxyAgent(
     )
 
 # Define the functions according to the function description:
-# one way of registering functions is to use the register_for_llm and register_for_execution decorators
 
 def exec_python(cell: Annotated[str, "Valid Python cell to execute."]) -> str:
     ipython = get_ipython()
