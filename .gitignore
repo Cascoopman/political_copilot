@@ -1,5 +1,6 @@
 # Private
-partybots/data/db/
+backend/scrapers/FactionWebsites/data/parties/
+backend/scrapers/FactionWebsites/data/db/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
