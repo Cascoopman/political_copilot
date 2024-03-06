@@ -273,17 +273,11 @@ debators = [debator_vooruit, debator_groen, debator_cdv, debator_nva, debator_op
 retrievers = [retriever_vooruit, retriever_groen, retriever_cdv, retriever_nva, retriever_openvld, retriever_pvda, retriever_vlaamsbelang]
 
 # Generate the party's defenses
-#retriever_vooruit.initiate_chat(debator_vooruit,problem=message)
-#chat_manager.receive(message=debator_vooruit.last_message(),sender=debator_vooruit,request_reply=False)
-#retriever_groen.initiate_chat(debator_groen,problem=message)
-#chat_manager.receive(message=debator_groen.last_message(),sender=debator_groen,request_reply=False)
 for i in range(0,len(debators)):
     retrievers[i].initiate_chat(debators[i],problem=message,silent=True)
     chat_manager.receive(message=debators[i].last_message(),sender=debators[i],request_reply=False,silent=True)
 
 # Generate the summary
-#chat_manager.send(chat_manager.last_message(agent=debator_vooruit),recipient=summarizer,request_reply=False)
-#chat_manager.send(chat_manager.last_message(agent=debator_groen),recipient=summarizer,request_reply=True)
 for i in range(0,len(debators)-1):
     chat_manager.send(chat_manager.last_message(agent=debators[i]),recipient=summarizer,request_reply=False,silent=True)
 chat_manager.send(chat_manager.last_message(agent=debators[-1]),recipient=summarizer,request_reply=True,silent=True)
