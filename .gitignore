@@ -1,4 +1,5 @@
-# Private
+# Scraped files
+/microservice/app/scrapers/output_pdfs/
 /microservice/app/scrapers/FactionWebsites/data/db/
 /microservice/app/scrapers/FactionWebsites/data/parties/
 
