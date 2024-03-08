@@ -2,13 +2,12 @@ import pyarrow as pa
 import pandas as pd
 from fondant.component import PandasTransformComponent
 from fondant.pipeline import lightweight_component
-import regex
+import re
 
 @lightweight_component(consumes={"text": pa.string()}, 
                        produces={"sender": pa.string(),
                                  "responder": pa.string(),
-                                 "qna": pa.string()},
-                       extra_requires=["regex"])
+                                 "qna": pa.string()})
 class StructureText(PandasTransformComponent):  
     def extract_qa(self, message):
         """Extracts the sender, the responder, and groups the questions with answers from the given message.
@@ -30,7 +29,7 @@ class StructureText(PandasTransformComponent):
         (?P<answer>.+)
         '''
 
-        for match in regex.finditer(pattern, message):
+        for match in re.finditer(pattern, message):
             sender = match.group('questioner')
             responder = match.group('minister')
             question = match.group('question'),
