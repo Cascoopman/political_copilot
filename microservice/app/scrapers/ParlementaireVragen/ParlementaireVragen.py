@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import shutil
+import re
 
 
 def run():
@@ -74,5 +75,17 @@ def run():
             print(f"Downloaded {file_name}.pdf")
             print(f"Handeled Page {page_number} Article # {i}")
 
+def name_change():            
+    folder_path = "/Users/cas/Downloads/output_pdfs/natuur_en_milieu/"
+
+    for file_name in os.listdir(folder_path):
+        if file_name.endswith('.pdf'):
+            new_file_name = file_name.replace(' ', '_')
+            while not re.match(r'^[a-zA-Z]', new_file_name):
+                new_file_name = new_file_name[1:]
+            if new_file_name != file_name:
+                os.rename(os.path.join(folder_path, file_name), os.path.join(folder_path, new_file_name))
+                print(f"Renamed file {file_name} to {new_file_name}")
+
 if __name__ == "__main__":
-    run()
+    name_change()

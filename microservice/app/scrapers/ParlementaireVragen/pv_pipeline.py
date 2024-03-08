@@ -1,19 +1,25 @@
 from pathlib import Path
-import pyarrow as pa
 from fondant.pipeline import Pipeline
-from fondant.pipeline.runner import DockerRunner
 
 BASE_PATH = "./fondant-artifacts"
-
 Path(BASE_PATH).mkdir(parents=True, exist_ok=True)
 
 pipeline = Pipeline(
     name="parlementaire-vragen",
-    description="Download the pdfs into a database and then index and vectorize them.",
+    description="Retrieve pdf download links, download content, structure the content and index into vector DB.",
     base_path=BASE_PATH,
 )
 
-from fetch_links import CreateLinks
+# Currently using reusable component, but will be replaced by a custom component
+#from fetch_links import CreateLinks
 raw_data = pipeline.read(
-    ref=CreateLinks,
+    "load_from_pdf",
+    arguments={
+        "pdf_path": "/output_pdfs/natuur_en_milieu",
+    }
+)
+
+from structure_text import StructureText
+clean_data = raw_data.apply(
+    ref=StructureText,
 )
