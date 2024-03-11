@@ -10,20 +10,32 @@ pipeline = Pipeline(
     base_path=BASE_PATH,
 )
 
-# Currently using reusable component, but will be replaced by a custom component
-#from fetch_links import CreateLinks
-raw_data = pipeline.read(
-    "load_from_pdf",
+# Use a custom reusable (container) component to fetch the links
+# Todo: make lightweight component into a container
+# OR: Directly use a custom lightweight component to fetch the links
+from lw_fetch_links import FetchLinks
+links = pipeline.read(
+    FetchLinks,
     arguments={
-        "pdf_path": "/output_pdfs/natuur_en_milieu",
+        "link": 'https://www.vlaamsparlement.be/ajax/document-overview?page=0&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag&thema%5B%5D=Natuur%20en%20Milieu',
+        "pages": 1,
     }
 )
 
-# Use the reusable component to structure the text
-clean_data = raw_data.apply(
-    "parlementaire_vragen_structure_text",
-)
+# Todo: create component that actually downloads the pdfs behind the links
 
+# OR: (for testing purposes) use a reusable component to load the already downloaded pdfs (-> downloaded using ParlementaireVragen.py)
+#raw_data = pipeline.read(
+#    "load_from_pdf",
+#    arguments={
+#        "pdf_path": "/output_pdfs/natuur_en_milieu",
+#    }
+#)
+
+# Use the reusable component to structure the text (container: https://hub.docker.com/repository/docker/cascoopman/parlementaire_vragen_structure_text/general)
+#clean_data = raw_data.apply(
+#    "parlementaire_vragen_structure_text",
+#)
 # OR: Use the lightweight component to structure the data
 #from lw_structure_text import StructureText
 #clean_data = raw_data.apply(

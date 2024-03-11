@@ -3,7 +3,6 @@ from fondant.component import DaskLoadComponent
 
 from bs4 import BeautifulSoup
 import requests
-import shutil
 import dask.dataframe as dd
 import pyarrow as pa
 import pandas as pd
@@ -16,10 +15,20 @@ import pandas as pd
                 'View link href': pa.string(), 
                 'Download link text': pa.string(), 
                 'Download link href': pa.string()
-                })
-class CreateLinks(DaskLoadComponent):
+                },
+                extra_requires=['bs4'])
+class FetchLinks(DaskLoadComponent):
+    def __init__(self, link: str, pages: int):
+        import requests
+        self.link = link 
+        self.pages = pages
+    
+    def get_link(self):
+        return self.link
+    
     def load(self) -> dd.DataFrame:
-        AMOUNT_OF_PAGES = 1
+        import requests
+        AMOUNT_OF_PAGES = self.pages
         data = []
 
         for page_number in range(0, AMOUNT_OF_PAGES):
@@ -28,10 +37,9 @@ class CreateLinks(DaskLoadComponent):
         df = pd.DataFrame(data)
         return dd.from_pandas(df, npartitions=1)
     
-    @staticmethod
-    def fetch_document_info(page_number):
+    def fetch_document_info(self, page_number):
         data = []
-        request_URL = f'''https://www.vlaamsparlement.be/ajax/document-overview?page={page_number}&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag&thema%5B%5D=Natuur%20en%20Milieu'''
+        request_URL = self.get_link()
         headers = {'Accept': 'application/json'}
         response = requests.get(request_URL, headers=headers)
 

@@ -14,6 +14,9 @@ import re
                                  "date": pa.string(),
                                  "number": pa.string()})
 class StructureText(PandasTransformComponent):  
+    def __init__(self):
+        import re
+        
     def transform(self, dataframe: pd.DataFrame) -> pd.DataFrame:
         """Structure the original text into sender, responder, questions and the respective answer.
 
@@ -23,7 +26,7 @@ class StructureText(PandasTransformComponent):
         Returns:
             A pandas DataFrame with new columns for sender, responder, questions, and answers.
         """  
-
+        #import re
         # Assuming your text column name is 'text'
         dataframe['extracted_qa'] = dataframe['text'].apply(self.extract_qa)
         
