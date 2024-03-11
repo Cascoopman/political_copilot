@@ -19,7 +19,13 @@ raw_data = pipeline.read(
     }
 )
 
-from structure_text import StructureText
+# Use the reusable component to structure the text
 clean_data = raw_data.apply(
-    ref=StructureText,
+    "parlementaire_vragen_structure_text",
 )
+
+# OR: Use the lightweight component to structure the data
+#from lw_structure_text import StructureText
+#clean_data = raw_data.apply(
+#    StructureText,
+#)

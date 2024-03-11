@@ -1,0 +1,91 @@
+name: parlementaire-vragen
+services:
+  load_from_pdf:
+    command:
+    - --metadata
+    - '{"base_path": "/fondant-artifacts", "pipeline_name": "parlementaire-vragen",
+      "run_id": "parlementaire-vragen-20240311114137", "component_id": "load_from_pdf",
+      "cache_key": "720c6c22aebcf04db8cc3411a4a62f4c"}'
+    - --output_manifest_path
+    - /fondant-artifacts/parlementaire-vragen/parlementaire-vragen-20240311114137/load_from_pdf/manifest.json
+    - --pdf_path
+    - /output_pdfs/natuur_en_milieu
+    - --cache
+    - 'True'
+    - --cluster_type
+    - default
+    - --operation_spec
+    - '{"specification": {"name": "Load from pdf", "image": "fndnt/load_from_pdf:0.10.1",
+      "description": "Load pdf data stored locally or remote using langchain loaders.\n",
+      "tags": ["Data loading"], "produces": {"pdf_path": {"type": "string"}, "file_name":
+      {"type": "string"}, "text": {"type": "string"}}, "args": {"pdf_path": {"description":
+      "The path to the a pdf file or a folder containing pdf files to load. \nCan
+      be a local path or a remote path. If the path is remote, the loader class will
+      be \ndetermined by the scheme of the path.\n", "type": "str"}, "n_rows_to_load":
+      {"description": "Optional argument that defines the number of rows to load.
+      Useful for testing pipeline runs \non a small scale\n", "type": "int", "default":
+      "None"}, "index_column": {"description": "Column to set index to in the load
+      component, if not specified a default globally unique \nindex will be set\n",
+      "type": "str", "default": "None"}, "n_partitions": {"description": "Number of
+      partitions of the dask dataframe. If not specified, the number of partitions
+      will \nbe equal to the number of CPU cores. Set to high values if the data is
+      large and the pipeline\nis running out of memory.\n", "type": "int", "default":
+      "None"}}}, "consumes": {}, "produces": {}}'
+    depends_on: {}
+    entrypoint:
+    - fondant
+    - execute
+    - main
+    image: fndnt/load_from_pdf:0.10.1
+    labels:
+      pipeline_description: Retrieve pdf download links, download content, structure
+        the content and index into vector DB.
+    ports:
+    - 8787:8787
+    volumes:
+    - source: /Users/cas/political_agents/microservice/app/scrapers/ParlementaireVragen/fondant-artifacts
+      target: /fondant-artifacts
+      type: bind
+  parlementaire_vragen_structure_text:
+    build:
+      args: []
+      context: /Users/cas/political_agents/microservice/app/scrapers/ParlementaireVragen/parlementaire_vragen_structure_text
+    command:
+    - --metadata
+    - '{"base_path": "/fondant-artifacts", "pipeline_name": "parlementaire-vragen",
+      "run_id": "parlementaire-vragen-20240311114137", "component_id": "parlementaire_vragen_structure_text",
+      "cache_key": "27d3e657bb5749bb04b04cba244cfd82"}'
+    - --output_manifest_path
+    - /fondant-artifacts/parlementaire-vragen/parlementaire-vragen-20240311114137/parlementaire_vragen_structure_text/manifest.json
+    - --cache
+    - 'False'
+    - --cluster_type
+    - default
+    - --operation_spec
+    - '{"specification": {"name": "parlementaire_vragen_structure_text", "image":
+      "cascoopman/parlementaire_vragen_structure_text:latest", "description": "This
+      container is responsible for extracting key information from the text of a Parliamentary
+      Question.", "consumes": {"text": {"type": "string"}}, "produces": {"sender":
+      {"type": "string"}, "responder": {"type": "string"}, "questions": {"type": "string"},
+      "answers": {"type": "string"}, "jurisdiction": {"type": "string"}, "topic":
+      {"type": "string"}, "date": {"type": "string"}, "number": {"type": "string"}}},
+      "consumes": {}, "produces": {}}'
+    - --input_manifest_path
+    - /fondant-artifacts/parlementaire-vragen/parlementaire-vragen-20240311114137/load_from_pdf/manifest.json
+    depends_on:
+      load_from_pdf:
+        condition: service_completed_successfully
+    entrypoint:
+    - fondant
+    - execute
+    - main
+    labels:
+      pipeline_description: Retrieve pdf download links, download content, structure
+        the content and index into vector DB.
+    ports:
+    - 8787:8787
+    volumes:
+    - source: /Users/cas/political_agents/microservice/app/scrapers/ParlementaireVragen/fondant-artifacts
+      target: /fondant-artifacts
+      type: bind
+version: '3.8'
