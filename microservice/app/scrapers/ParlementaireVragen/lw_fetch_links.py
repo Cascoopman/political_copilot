@@ -23,7 +23,7 @@ class CreateLinks(DaskLoadComponent):
         data = []
 
         for page_number in range(0, AMOUNT_OF_PAGES):
-            data.extend(CreateLinks.fetch_document_info(page_number))
+            data.extend(self.fetch_document_info(page_number))
 
         df = pd.DataFrame(data)
         return dd.from_pandas(df, npartitions=1)
