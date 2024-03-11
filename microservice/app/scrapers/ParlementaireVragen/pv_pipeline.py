@@ -10,6 +10,7 @@ pipeline = Pipeline(
     base_path=BASE_PATH,
 )
 
+# STEP 1: FETCH THE PDF DOWNLOAD LINKS
 # Use a custom reusable (container) component to fetch the links
 # Todo: make lightweight component into a container
 # OR: Directly use a custom lightweight component to fetch the links
@@ -22,6 +23,7 @@ links = pipeline.read(
     }
 )
 
+# STEP 2: DOWNLOAD THE CONTENT OF THE PDFS USING THE LINKS
 # Todo: create component that actually downloads the pdfs behind the links
 
 # OR: (for testing purposes) use a reusable component to load the already downloaded pdfs (-> downloaded using ParlementaireVragen.py)
@@ -32,6 +34,7 @@ links = pipeline.read(
 #    }
 #)
 
+# STEP 3: EXTRACT AND STRUCTURE THE TEXT USING REGEX
 # Use the reusable component to structure the text (container: https://hub.docker.com/repository/docker/cascoopman/parlementaire_vragen_structure_text/general)
 #clean_data = raw_data.apply(
 #    "parlementaire_vragen_structure_text",
