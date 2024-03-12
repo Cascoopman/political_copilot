@@ -1,0 +1,1 @@
+/fondant-artifacts/bvr_scraper/bvr_scraper-20240312115126/load_bvr_component/manifest.json
