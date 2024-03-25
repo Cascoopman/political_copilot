@@ -1,0 +1,11 @@
+name: extract_pdf_text_component
+description: Custom reusable component to download the text from pdf download links
+image: extract_pdf_text_component:latest
+
+consumes:
+  Download link href:
+    type: "string"
+
+produces:
+  text: 
+    type: "string"

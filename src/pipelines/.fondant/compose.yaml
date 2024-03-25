@@ -1,5 +1,42 @@
 name: pv_scraper
 services:
+  extract_pdf_text_component:
+    build:
+      args: []
+      context: /Users/cas/Documents/political_agents/src/pipelines/components/scraper_components/extract_pdf_text_component
+    command:
+    - --metadata
+    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
+      "pv_scraper-20240325145223", "component_id": "extract_pdf_text_component", "cache_key":
+      "6c01fc8b0f706c2054f0168d1dbe731a"}'
+    - --output_manifest_path
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240325145223/extract_pdf_text_component/manifest.json
+    - --cache
+    - 'False'
+    - --cluster_type
+    - default
+    - --operation_spec
+    - '{"specification": {"name": "extract_pdf_text_component", "image": "extract_pdf_text_component:latest",
+      "description": "Custom reusable component to download the text from pdf download
+      links", "consumes": {"Download link href": {"type": "string"}}, "produces":
+      {"text": {"type": "string"}}}, "consumes": {}, "produces": {}}'
+    - --input_manifest_path
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240325145223/fetchlink_pv_component/manifest.json
+    depends_on:
+      fetchlink_pv_component:
+        condition: service_completed_successfully
+    entrypoint:
+    - fondant
+    - execute
+    - main
+    labels:
+      pipeline_description: null
+    ports:
+    - 8787:8787
+    volumes:
+    - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
+      target: /fondant-artifacts
+      type: bind
   fetchlink_pv_component:
     build:
       args: []
@@ -7,16 +44,18 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
-      "pv_scraper-20240325111530", "component_id": "fetchlink_pv_component", "cache_key":
-      "dce903c0dc84692d5021190a28159861"}'
+      "pv_scraper-20240325145223", "component_id": "fetchlink_pv_component", "cache_key":
+      "5180cf116598af61fd8e03ed290f2a89"}'
     - --output_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240325111530/fetchlink_pv_component/manifest.json
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240325145223/fetchlink_pv_component/manifest.json
     - --link
     - https://www.vlaamsparlement.be/ajax/document-overview?page=0&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag&thema%5B%5D=Natuur%20en%20Milieu
     - --num_pages
     - '1'
     - --cache
     - 'False'
+    - --cluster_type
+    - default
     - --operation_spec
     - '{"specification": {"name": "fetchlink_pv_component", "image": "fetchlink_pv_component:latest",
       "description": "Custom component to fetch all the links directing to the parliamentairy
@@ -29,6 +68,47 @@ services:
       "num_pages": {"description": "The number of pages to scrape", "type": "int",
       "default": 1}}}, "consumes": {}, "produces": {}}'
     depends_on: {}
+    entrypoint:
+    - fondant
+    - execute
+    - main
+    labels:
+      pipeline_description: null
+    ports:
+    - 8787:8787
+    volumes:
+    - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
+      target: /fondant-artifacts
+      type: bind
+  parlementaire_vragen_structure_text:
+    build:
+      args: []
+      context: /Users/cas/Documents/political_agents/src/pipelines/components/scraper_components/regex_pv_component
+    command:
+    - --metadata
+    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
+      "pv_scraper-20240325145223", "component_id": "parlementaire_vragen_structure_text",
+      "cache_key": "2abad51fb4d9bcffada2b53abde167bc"}'
+    - --output_manifest_path
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240325145223/parlementaire_vragen_structure_text/manifest.json
+    - --cache
+    - 'False'
+    - --cluster_type
+    - default
+    - --operation_spec
+    - '{"specification": {"name": "parlementaire_vragen_structure_text", "image":
+      "cascoopman/parlementaire_vragen_structure_text:latest", "description": "This
+      container is responsible for extracting key information from the text of a Parliamentary
+      Question.", "consumes": {"text": {"type": "string"}}, "produces": {"sender":
+      {"type": "string"}, "responder": {"type": "string"}, "questions": {"type": "string"},
+      "answers": {"type": "string"}, "jurisdiction": {"type": "string"}, "topic":
+      {"type": "string"}, "date": {"type": "string"}, "number": {"type": "string"}}},
+      "consumes": {}, "produces": {}}'
+    - --input_manifest_path
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240325145223/extract_pdf_text_component/manifest.json
+    depends_on:
+      extract_pdf_text_component:
+        condition: service_completed_successfully
     entrypoint:
     - fondant
     - execute

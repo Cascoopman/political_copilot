@@ -22,18 +22,13 @@ links = pipeline.read(
 )
 
 # STEP 2: DOWNLOAD THE CONTENT OF THE PDFS USING THE LINKS
-# Todo: create component that actually downloads the pdfs behind the links
-
-# OR: (for testing purposes) use a reusable component to load the already downloaded pdfs (-> downloaded using ParlementaireVragen.py)
-#raw_data = pipeline.read(
-#    "load_from_pdf",
-#    arguments={
-#        "pdf_path": "/output_pdfs/natuur_en_milieu",
-#    }
-#)
+# Use the reusable component to load the remote pdfs
+raw_data = links.apply(
+    "components/scraper_components/extract_pdf_text_component",
+)
 
 # STEP 3: EXTRACT AND STRUCTURE THE TEXT USING REGEX
 # Use the reusable component to structure the text (container: https://hub.docker.com/repository/docker/cascoopman/parlementaire_vragen_structure_text/general)
-#clean_data = raw_data.apply(
-#    "components/scraper_components/regex_pv_component",
-#)
+regex_data = raw_data.apply(
+    "components/scraper_components/regex_pv_component",
+)

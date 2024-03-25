@@ -1,9 +1,9 @@
-import pandas as pd
-from fondant.component import PandasTransformComponent
+import dask.dataframe as dd
+from fondant.component import DaskTransformComponent
 import re
 
-class StructureText(PandasTransformComponent):  
-    def transform(self, dataframe: pd.DataFrame) -> pd.DataFrame:
+class StructureText(DaskTransformComponent):  
+    def transform(self, dataframe: dd.DataFrame) -> dd.DataFrame:
         """Structure the original text into sender, responder, questions and the respective answer.
 
         Args:
@@ -13,24 +13,32 @@ class StructureText(PandasTransformComponent):
             A pandas DataFrame with new columns for sender, responder, questions, and answers.
         """  
 
-        # Assuming your text column name is 'text'
-        dataframe['extracted_qa'] = dataframe['text'].apply(self.extract_qa)
+        dataframe_with_qa = dataframe.map_partitions(self.apply_extract_qa, 
+                                                     meta={
+                                                         'extracted_qa': 'string'})
         
-        # Extracting data from the dictionary
-        dataframe['sender'] = dataframe['extracted_qa'].apply(lambda x: x['sender'])
-        dataframe['responder'] = dataframe['extracted_qa'].apply(lambda x: x['responder'])
-        dataframe['questions'] = dataframe['extracted_qa'].apply(lambda x: x['questions'])
-        dataframe['answers'] = dataframe['extracted_qa'].apply(lambda x: x['answers'])
-        dataframe['jurisdiction'] = dataframe['extracted_qa'].apply(lambda x: x['jurisdiction'])
-        dataframe['topic'] = dataframe['extracted_qa'].apply(lambda x: x['topic'])
-        dataframe['date'] = dataframe['extracted_qa'].apply(lambda x: x['date'])
-        dataframe['number'] = dataframe['extracted_qa'].apply(lambda x: x['number'])
+        # Extract individual columns from the dictionary and assign them to new columns
+        dataframe_with_columns = dataframe_with_qa.assign(
+            number=dataframe_with_qa['extracted_qa'].apply(lambda x: x['number'], meta=('number', 'string')),
+            sender=dataframe_with_qa['extracted_qa'].apply(lambda x: x['sender'], meta=('sender', 'string')),
+            date=dataframe_with_qa['extracted_qa'].apply(lambda x: x['date'], meta=('date', 'string')),
+            responder=dataframe_with_qa['extracted_qa'].apply(lambda x: x['responder'], meta=('responder', 'string')),
+            jurisdiction=dataframe_with_qa['extracted_qa'].apply(lambda x: x['jurisdiction'], meta=('jurisdiction', 'string')),
+            topic=dataframe_with_qa['extracted_qa'].apply(lambda x: x['topic'], meta=('topic', 'string')),
+            questions=dataframe_with_qa['extracted_qa'].apply(lambda x: x['questions'], meta=('questions', 'string')),
+            answers=dataframe_with_qa['extracted_qa'].apply(lambda x: x['answers'], meta=('answers', 'string'))
+        )
         
-        # Drop the temporary column 'extracted_qa' if needed
-        dataframe.drop('extracted_qa', axis=1, inplace=True)  # Uncomment to drop
+        # Drop the temporary column 'extracted_qa'
+        dataframe_with_columns = dataframe_with_columns.drop(columns='extracted_qa')
+        
+        return dataframe_with_columns
 
-        return dataframe
-
+    @staticmethod
+    def apply_extract_qa(partition):
+        partition['extracted_qa'] = partition['text'].apply(StructureText.extract_qa)
+        return partition[['extracted_qa']]
+    
     @staticmethod
     def extract_qa(message):
         """Extracts the sender, the responder, and groups the questions with answers from the given message.
