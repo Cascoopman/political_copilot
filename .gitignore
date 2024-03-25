@@ -1,9 +1,5 @@
-# Scraped files & Fondant intermediary data processing steps
-/microservice/app/scrapers/ParlementaireVragen/fondant-artifacts/output_pdfs/natuur_en_milieu/
-/microservice/app/scrapers/output_pdfs/
-/microservice/app/scrapers/FactionWebsites/data/db/
-/microservice/app/scrapers/FactionWebsites/data/parties/
-/microservice/app/scrapers/ParlementaireVragen/fondant-artifacts/parlementaire-vragen
+# Do not upload all the scraped data
+src/pipelines/fondant-artifacts
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
