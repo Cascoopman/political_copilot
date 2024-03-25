@@ -1,24 +1,33 @@
-name: bvr_scraper
+name: pv_scraper
 services:
-  load_bvr_component:
+  fetchlink_pv_component:
     build:
       args: []
-      context: /Users/jensbontinck/projects/personal-work/political_copilot/src/pipelines/components/scraper_components/load_bvr_component
+      context: /Users/cas/Documents/political_agents/src/pipelines/components/scraper_components/fetchlinks_pv_component
     command:
     - --metadata
-    - '{"base_path": "/fondant-artifacts", "pipeline_name": "bvr_scraper", "run_id":
-      "bvr_scraper-20240312115126", "component_id": "load_bvr_component", "cache_key":
-      "cb08c6ba1214d9ec3725f49af1e5c213"}'
+    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
+      "pv_scraper-20240325111530", "component_id": "fetchlink_pv_component", "cache_key":
+      "dce903c0dc84692d5021190a28159861"}'
     - --output_manifest_path
-    - /fondant-artifacts/bvr_scraper/bvr_scraper-20240312115126/load_bvr_component/manifest.json
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240325111530/fetchlink_pv_component/manifest.json
+    - --link
+    - https://www.vlaamsparlement.be/ajax/document-overview?page=0&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag&thema%5B%5D=Natuur%20en%20Milieu
+    - --num_pages
+    - '1'
     - --cache
     - 'False'
-    - --cluster_type
-    - default
     - --operation_spec
-    - '{"specification": {"name": "load_bvr_component", "image": "load_bvr_component:latest",
-      "description": "Custom component to load the decisions of the flemish government"},
-      "consumes": {}, "produces": {}}'
+    - '{"specification": {"name": "fetchlink_pv_component", "image": "fetchlink_pv_component:latest",
+      "description": "Custom component to fetch all the links directing to the parliamentairy
+      questions from the website of the flemish government", "produces": {"File Name":
+      {"type": "string"}, "Card title": {"type": "string"}, "Document number": {"type":
+      "string"}, "View link text": {"type": "string"}, "View link href": {"type":
+      "string"}, "Download link text": {"type": "string"}, "Download link href": {"type":
+      "string"}}, "args": {"link": {"description": "The baseline link to the website
+      of the flemish government", "type": "str", "default": "https://www.vlaamsparlement.be/ajax/document-overview?page=0&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag&thema%5B%5D=Natuur%20en%20Milieu"},
+      "num_pages": {"description": "The number of pages to scrape", "type": "int",
+      "default": 1}}}, "consumes": {}, "produces": {}}'
     depends_on: {}
     entrypoint:
     - fondant
@@ -29,7 +38,7 @@ services:
     ports:
     - 8787:8787
     volumes:
-    - source: /Users/jensbontinck/projects/personal-work/political_copilot/src/pipelines/fondant-artifacts
+    - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
       target: /fondant-artifacts
       type: bind
 version: '3.8'

@@ -1,34 +1,22 @@
-from fondant.pipeline import lightweight_component
 from fondant.component import DaskLoadComponent
-
-from bs4 import BeautifulSoup
-import requests
 import dask.dataframe as dd
-import pyarrow as pa
 import pandas as pd
+import requests
+from bs4 import BeautifulSoup
 
-@lightweight_component(produces={
-                'File Name': pa.string(),
-                'Card title': pa.string(), 
-                'Document number': pa.string(), 
-                'View link text': pa.string(),
-                'View link href': pa.string(), 
-                'Download link text': pa.string(), 
-                'Download link href': pa.string()
-                },
-                extra_requires=['bs4'])
 class FetchLinks(DaskLoadComponent):
-    def __init__(self, link: str, pages: int):
-        import requests
+    def __init__(self, link: str, num_pages: int):
         self.link = link 
-        self.pages = pages
+        self.pages = num_pages
     
     def get_link(self):
         return self.link
     
+    def get_pages(self):
+        return self.pages
+    
     def load(self) -> dd.DataFrame:
-        import requests
-        AMOUNT_OF_PAGES = self.pages
+        AMOUNT_OF_PAGES = self.get_pages()
         data = []
 
         for page_number in range(0, AMOUNT_OF_PAGES):
