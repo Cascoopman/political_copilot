@@ -4,7 +4,7 @@ services:
     command:
     - --base_path
     - /fondant-artifacts
-    image: fndnt/data_explorer:0.11.0
+    image: fndnt/data_explorer:0.10.1
     ports:
     - 8501:8501
     volumes:

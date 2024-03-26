@@ -57,15 +57,20 @@ class StructureText(DaskTransformComponent):
             - date: The date of the message.
             - number: The number of the message.
         """     
-        # Define patterns to match            
-        pattern = r'''(?s)SCHRIFTELIJKE VRAAG\n(?P<number>.+?)\nvan\s+(?P<sender>.+?)\ndatum:\s+(?P<date>.+)\naan\s+(?P<responder>.+?)\s*\n(?P<jurisdiction>.+?)\n(?P<topic>.+?)\n(?P<questions>.+)\n\s*(?P=responder)\s*\n(?P=jurisdiction)\s*\nANTWOORD\nop vraag\s*(?P=number)\s*van\s*(?P=date)\s*\nvan\s*(?P=sender)\s*\n(?P<answers>.+)$'''
-        
+        # Define patterns to match  
+        header_pattern = r'''[\s\n]*SCHRIFTELIJKE VRAAG[\s\n]*(?P<number>.+?)[\s\n]*van[\s\n]*(?P<sender>.+?)[\s\n]*datum:[\s\n]*(?P<date>.+?)[\s\n]*aan[\s\n]*(?P<responder>.+?)[\s\n]*\n[\s\n]*(?P<jurisdiction>.+?)\s*\n\s*(?P<topic>.+?)\s*\n'''
+        questions_pattern = r'''[\s\n]*SCHRIFTELIJKE VRAAG[\s\n]*(?P<number>.+?)[\s\n]*van[\s\n]*(?P<sender>.+?)[\s\n]*datum:[\s\n]*(?P<date>.+?)[\s\n]*aan[\s\n]*(?P<responder>.+?)[\s\n]*\n[\s\n]*(?P<jurisdiction>.+?)\s*\n\s*(?P<topic>.+?)\s*\n(?P<questions>[\s\S]*)(?P=responder)\s*\n\s*(?P=jurisdiction)\s*\n\s*ANTWOORD\s*'''
+        answers_pattern = r'''[\s\n]*SCHRIFTELIJKE VRAAG[\s\n]*(?P<number>.+?)[\s\n]*van[\s\n]*(?P<sender>.+?)[\s\n]*datum:[\s\n]*(?P<date>.+?)[\s\n]*aan[\s\n]*(?P<responder>.+?)[\s\n]*\n[\s\n]*(?P<jurisdiction>.+?)\s*\n\s*(?P<topic>.+?)\s*\n(?P<questions>[\s\S]*)(?P=responder)\s*\n\s*(?P=jurisdiction)\s*\n\s*ANTWOORD[\s\S]*(?P=sender)(?P<answers>[\s\S]*)'''
+          
         # Find matches for each pattern
-        match = re.search(pattern, message)
+        header_match = re.search(header_pattern, message)
+        questions_match = re.search(questions_pattern, message)
+        answers_match = re.search(answers_pattern, message)
         
         # If no match is found, return None
-        if not match:
-            print(f"Failed to match pattern for message: {message}")
+        if not header_match or not questions_match or not answers_match:
+            print("Failed to match pattern for message: \n")
+            print(repr(message))
             return {
                 "number": None,
                 "sender": None,
@@ -79,36 +84,36 @@ class StructureText(DaskTransformComponent):
         
         # Extract the data from the match, ensuring that the group exists
         number = None
-        if match.group('number'):
-            number = match.group('number')
+        if header_match.group('number'):
+            number = header_match.group('number')
         
         sender = None
-        if match.group('sender'):
-            sender = match.group('sender')
+        if header_match.group('sender'):
+            sender = header_match.group('sender')
         
         date = None
-        if match.group('date'):
-            date = match.group('date')
+        if header_match.group('date'):
+            date = header_match.group('date')
             
         responder = None
-        if match.group('responder'):
-            responder = match.group('responder')
+        if header_match.group('responder'):
+            responder = header_match.group('responder')
             
         jurisdiction = None
-        if match.group('jurisdiction'):
-            jurisdiction = match.group('jurisdiction')
+        if header_match.group('jurisdiction'):
+            jurisdiction = header_match.group('jurisdiction')
         
         topic = None
-        if match.group('topic'):
-            topic = match.group('topic')
+        if header_match.group('topic'):
+            topic = header_match.group('topic')
             
         questions = None
-        if match.group('questions'):
-            questions = match.group('questions')
+        if questions_match.group('questions'):
+            questions = questions_match.group('questions')
             
         answers = None
-        if match.group('answers'):
-            answers = match.group('answers')
+        if answers_match.group('answers'):
+            answers = answers_match.group('answers')
         
         # Return the extracted data        
         return {
