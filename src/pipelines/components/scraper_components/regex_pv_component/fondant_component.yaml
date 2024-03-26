@@ -1,13 +1,13 @@
 name:
-  parlementaire_vragen_structure_text
+  regex_pv_component
 description:
   This container is responsible for extracting key information from the text of a Parliamentary Question.
 image:
-  cascoopman/parlementaire_vragen_structure_text:latest
+  regex_pv_component:latest
 
 consumes:
   text:
-    type: string
+    type: "string"
 
 produces: 
   sender:
