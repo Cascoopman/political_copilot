@@ -1,8 +1,11 @@
 from pathlib import Path
 from fondant.pipeline import Pipeline
+import os
 
 BASE_PATH = "./fondant-artifacts"
 Path(BASE_PATH).mkdir(parents=True, exist_ok=True)
+
+GCP_PROJECT_NAME = os.getenv("GCP_PROJECT_NAME")
 
 pipeline = Pipeline(
     name="pv_scraper",
@@ -16,7 +19,7 @@ pipeline = Pipeline(
 links = pipeline.read(
     "components/scraper_components/fetchlinks_pv_component",
     arguments={
-        "link": 'https://www.vlaamsparlement.be/ajax/document-overview?page=0&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag&thema%5B%5D=Natuur%20en%20Milieu',
+        "link": 'https://www.vlaamsparlement.be/ajax/document-overview?page=0&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag',
         "num_pages": 1,
     }
 )
@@ -31,4 +34,15 @@ raw_data = links.apply(
 # Use the reusable component to structure the text (container: https://hub.docker.com/repository/docker/cascoopman/parlementaire_vragen_structure_text/general)
 regex_data = raw_data.apply(
     "components/scraper_components/regex_pv_component",
+)
+
+print(f"{GCP_PROJECT_NAME}"+"_scrape/pv")
+
+# STEP 4: STORE THE DATA IN A GCP BUCKET
+regex_data.write(
+    "write_to_file",
+    arguments={
+        "path": f"gs://{GCP_PROJECT_NAME}_scrape/pv",
+        "format": "parquet",
+    }
 )

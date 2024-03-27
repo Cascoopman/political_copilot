@@ -7,10 +7,10 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
-      "pv_scraper-20240326131827", "component_id": "extract_pdf_text_component", "cache_key":
-      "6c01fc8b0f706c2054f0168d1dbe731a"}'
+      "pv_scraper-20240327151240", "component_id": "extract_pdf_text_component", "cache_key":
+      "5aac49ac2e86d423bd45a1d20307c36c"}'
     - --output_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240326131827/extract_pdf_text_component/manifest.json
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/extract_pdf_text_component/manifest.json
     - --cache
     - 'False'
     - --cluster_type
@@ -21,7 +21,7 @@ services:
       links", "consumes": {"Download link href": {"type": "string"}}, "produces":
       {"text": {"type": "string"}}}, "consumes": {}, "produces": {}}'
     - --input_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240326131827/fetchlink_pv_component/manifest.json
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/fetchlink_pv_component/manifest.json
     depends_on:
       fetchlink_pv_component:
         condition: service_completed_successfully
@@ -37,6 +37,7 @@ services:
     - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
       target: /fondant-artifacts
       type: bind
+    - /Users/cas/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/application_default_credentials.json
   fetchlink_pv_component:
     build:
       args: []
@@ -44,12 +45,12 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
-      "pv_scraper-20240326131827", "component_id": "fetchlink_pv_component", "cache_key":
-      "5180cf116598af61fd8e03ed290f2a89"}'
+      "pv_scraper-20240327151240", "component_id": "fetchlink_pv_component", "cache_key":
+      "f6196e2aad818b294137865fcfb108f1"}'
     - --output_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240326131827/fetchlink_pv_component/manifest.json
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/fetchlink_pv_component/manifest.json
     - --link
-    - https://www.vlaamsparlement.be/ajax/document-overview?page=0&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag&thema%5B%5D=Natuur%20en%20Milieu
+    - https://www.vlaamsparlement.be/ajax/document-overview?page=0&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag
     - --num_pages
     - '1'
     - --cache
@@ -80,6 +81,7 @@ services:
     - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
       target: /fondant-artifacts
       type: bind
+    - /Users/cas/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/application_default_credentials.json
   regex_pv_component:
     build:
       args: []
@@ -87,10 +89,10 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
-      "pv_scraper-20240326131827", "component_id": "regex_pv_component", "cache_key":
-      "db19420dacaf016363bfee0e673d1e6f"}'
+      "pv_scraper-20240327151240", "component_id": "regex_pv_component", "cache_key":
+      "bfe2dad42895f22bdc30f56823351ef1"}'
     - --output_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240326131827/regex_pv_component/manifest.json
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/regex_pv_component/manifest.json
     - --cache
     - 'False'
     - --cluster_type
@@ -104,7 +106,7 @@ services:
       {"type": "string"}, "topic": {"type": "string"}, "date": {"type": "string"},
       "number": {"type": "string"}}}, "consumes": {}, "produces": {}}'
     - --input_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240326131827/extract_pdf_text_component/manifest.json
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/extract_pdf_text_component/manifest.json
     depends_on:
       extract_pdf_text_component:
         condition: service_completed_successfully
@@ -120,4 +122,52 @@ services:
     - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
       target: /fondant-artifacts
       type: bind
+    - /Users/cas/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/application_default_credentials.json
+  write_to_file:
+    command:
+    - --metadata
+    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
+      "pv_scraper-20240327151240", "component_id": "write_to_file", "cache_key": "4bcf99418c95c9c617dc997f743b0ffa"}'
+    - --output_manifest_path
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/write_to_file/manifest.json
+    - --path
+    - gs://cedar-talent-417009_scrape/pv
+    - --format
+    - parquet
+    - --cache
+    - 'True'
+    - --cluster_type
+    - default
+    - --operation_spec
+    - '{"specification": {"name": "Write to file", "image": "fndnt/write_to_file:0.10.1",
+      "description": "A Fondant component to write a dataset to file on a local machine
+      or to a cloud storage bucket. The dataset can be written as csv or parquet.",
+      "tags": ["Data writing"], "consumes": {"additionalProperties": true}, "args":
+      {"path": {"description": "Path to store the dataset, whether it''s a local path
+      or a cloud storage bucket,  must be specified. A separate filename will be generated
+      for each partition. If you are using the local runner and export the data to
+      a local directory,  ensure that you mount the path to the directory using the
+      `--extra-volumes` argument.", "type": "str"}, "format": {"description": "Format
+      for storing the dataframe can be either `csv` or `parquet`. As default  `parquet`
+      is used. The CSV files contain the column as a header and use a comma as a delimiter.",
+      "type": "str", "default": "parquet"}}}, "consumes": {}, "produces": {}}'
+    - --input_manifest_path
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/regex_pv_component/manifest.json
+    depends_on:
+      regex_pv_component:
+        condition: service_completed_successfully
+    entrypoint:
+    - fondant
+    - execute
+    - main
+    image: fndnt/write_to_file:0.10.1
+    labels:
+      pipeline_description: null
+    ports:
+    - 8787:8787
+    volumes:
+    - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
+      target: /fondant-artifacts
+      type: bind
+    - /Users/cas/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/application_default_credentials.json
 version: '3.8'
