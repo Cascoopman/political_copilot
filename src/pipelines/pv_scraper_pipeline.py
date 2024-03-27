@@ -19,8 +19,7 @@ pipeline = Pipeline(
 links = pipeline.read(
     "components/scraper_components/fetchlinks_pv_component",
     arguments={
-        "link": 'https://www.vlaamsparlement.be/ajax/document-overview?page=0&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag',
-        "num_pages": 1,
+        "num_pages": 10,
     }
 )
 
@@ -31,7 +30,8 @@ raw_data = links.apply(
 )
 
 # STEP 3: EXTRACT AND STRUCTURE THE TEXT USING REGEX
-# Use the reusable component to structure the text (container: https://hub.docker.com/repository/docker/cascoopman/parlementaire_vragen_structure_text/general)
+# Use the reusable component to structure the text 
+# (container: https://hub.docker.com/repository/docker/cascoopman/parlementaire_vragen_structure_text/general)
 regex_data = raw_data.apply(
     "components/scraper_components/regex_pv_component",
 )
@@ -42,7 +42,7 @@ print(f"{GCP_PROJECT_NAME}"+"_scrape/pv")
 regex_data.write(
     "write_to_file",
     arguments={
-        "path": f"gs://{GCP_PROJECT_NAME}_scrape/pv",
+        "path": "gs://GCPPROJECTNAME _scrape/pv",
         "format": "parquet",
     }
 )
