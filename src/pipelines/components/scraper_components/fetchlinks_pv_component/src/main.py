@@ -22,8 +22,8 @@ class FetchLinks(DaskLoadComponent):
     
     def fetch_document_info(self, page_number):
         data = []
-
-        request_URL = f'https://www.vlaamsparlement.be/ajax/document-overview?page={page_number}&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag'
+                                                                                           
+        request_URL = f'https://www.vlaamsparlement.be/ajax/document-overview?page={page_number}&period=current_parliamentary_term&current_parliamentary_term_value=2019-2024&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag'
 
         headers = {'Accept': 'application/json'}
         response = requests.get(request_URL, headers=headers)
