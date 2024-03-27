@@ -69,8 +69,9 @@ class StructureText(DaskTransformComponent):
         
         # If no match is found, return None
         if not header_match or not questions_match or not answers_match:
-            print("Failed to match pattern for message: \n")
-            print(repr(message))
+            # Enable the following lines to debug the pattern matching
+            #print("Failed to match pattern for message: \n")
+            #print(repr(message))
             return {
                 "number": None,
                 "sender": None,

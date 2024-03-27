@@ -5,21 +5,16 @@ import requests
 from bs4 import BeautifulSoup
 
 class FetchLinks(DaskLoadComponent):
-    def __init__(self, link: str, num_pages: int):
-        self.link = link 
+    def __init__(self, num_pages: int):
         self.pages = num_pages
-    
-    def get_link(self):
-        return self.link
     
     def get_pages(self):
         return self.pages
     
     def load(self) -> dd.DataFrame:
-        AMOUNT_OF_PAGES = self.get_pages()
         data = []
 
-        for page_number in range(0, AMOUNT_OF_PAGES):
+        for page_number in range(0, self.get_pages()):
             data.extend(self.fetch_document_info(page_number))
 
         df = pd.DataFrame(data)
@@ -27,7 +22,9 @@ class FetchLinks(DaskLoadComponent):
     
     def fetch_document_info(self, page_number):
         data = []
-        request_URL = self.get_link()
+
+        request_URL = f'https://www.vlaamsparlement.be/ajax/document-overview?page={page_number}&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag'
+
         headers = {'Accept': 'application/json'}
         response = requests.get(request_URL, headers=headers)
 

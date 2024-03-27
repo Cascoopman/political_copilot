@@ -7,10 +7,10 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
-      "pv_scraper-20240327151240", "component_id": "extract_pdf_text_component", "cache_key":
-      "5aac49ac2e86d423bd45a1d20307c36c"}'
+      "pv_scraper-20240327162443", "component_id": "extract_pdf_text_component", "cache_key":
+      "f4019e936de2f950411108c92cf94757"}'
     - --output_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/extract_pdf_text_component/manifest.json
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/extract_pdf_text_component/manifest.json
     - --cache
     - 'False'
     - --cluster_type
@@ -21,7 +21,7 @@ services:
       links", "consumes": {"Download link href": {"type": "string"}}, "produces":
       {"text": {"type": "string"}}}, "consumes": {}, "produces": {}}'
     - --input_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/fetchlink_pv_component/manifest.json
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/fetchlink_pv_component/manifest.json
     depends_on:
       fetchlink_pv_component:
         condition: service_completed_successfully
@@ -45,14 +45,12 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
-      "pv_scraper-20240327151240", "component_id": "fetchlink_pv_component", "cache_key":
-      "f6196e2aad818b294137865fcfb108f1"}'
+      "pv_scraper-20240327162443", "component_id": "fetchlink_pv_component", "cache_key":
+      "90523b15a2d60cb4ef8b7896f7d9b70a"}'
     - --output_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/fetchlink_pv_component/manifest.json
-    - --link
-    - https://www.vlaamsparlement.be/ajax/document-overview?page=0&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/fetchlink_pv_component/manifest.json
     - --num_pages
-    - '1'
+    - '10'
     - --cache
     - 'False'
     - --cluster_type
@@ -64,10 +62,8 @@ services:
       {"type": "string"}, "Card title": {"type": "string"}, "Document number": {"type":
       "string"}, "View link text": {"type": "string"}, "View link href": {"type":
       "string"}, "Download link text": {"type": "string"}, "Download link href": {"type":
-      "string"}}, "args": {"link": {"description": "The baseline link to the website
-      of the flemish government", "type": "str", "default": "https://www.vlaamsparlement.be/ajax/document-overview?page=0&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag&thema%5B%5D=Natuur%20en%20Milieu"},
-      "num_pages": {"description": "The number of pages to scrape", "type": "int",
-      "default": 1}}}, "consumes": {}, "produces": {}}'
+      "string"}}, "args": {"num_pages": {"description": "The number of pages to scrape",
+      "type": "int", "default": 1}}}, "consumes": {}, "produces": {}}'
     depends_on: {}
     entrypoint:
     - fondant
@@ -89,10 +85,10 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
-      "pv_scraper-20240327151240", "component_id": "regex_pv_component", "cache_key":
-      "bfe2dad42895f22bdc30f56823351ef1"}'
+      "pv_scraper-20240327162443", "component_id": "regex_pv_component", "cache_key":
+      "283a2240b25cadfe2d2f10e8327be203"}'
     - --output_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/regex_pv_component/manifest.json
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/regex_pv_component/manifest.json
     - --cache
     - 'False'
     - --cluster_type
@@ -106,7 +102,7 @@ services:
       {"type": "string"}, "topic": {"type": "string"}, "date": {"type": "string"},
       "number": {"type": "string"}}}, "consumes": {}, "produces": {}}'
     - --input_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/extract_pdf_text_component/manifest.json
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/extract_pdf_text_component/manifest.json
     depends_on:
       extract_pdf_text_component:
         condition: service_completed_successfully
@@ -127,9 +123,9 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
-      "pv_scraper-20240327151240", "component_id": "write_to_file", "cache_key": "4bcf99418c95c9c617dc997f743b0ffa"}'
+      "pv_scraper-20240327162443", "component_id": "write_to_file", "cache_key": "1881ddcfccc4f8b0511c12dd1040bd02"}'
     - --output_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/write_to_file/manifest.json
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/write_to_file/manifest.json
     - --path
     - gs://cedar-talent-417009_scrape/pv
     - --format
@@ -152,7 +148,7 @@ services:
       is used. The CSV files contain the column as a header and use a comma as a delimiter.",
       "type": "str", "default": "parquet"}}}, "consumes": {}, "produces": {}}'
     - --input_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327151240/regex_pv_component/manifest.json
+    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/regex_pv_component/manifest.json
     depends_on:
       regex_pv_component:
         condition: service_completed_successfully

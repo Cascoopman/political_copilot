@@ -19,10 +19,6 @@ produces:
     type: "string"
 
 args:
-  link:
-    description: The baseline link to the website of the flemish government
-    type: str
-    default: 'https://www.vlaamsparlement.be/ajax/document-overview?page=0&period=current_year_of_office&current_year_of_office_value=2022-2023&aggregaat%5B%5D=Vraag%20of%20interpellatie&aggregaattype%5B%5D=Schriftelijke%20vraag&thema%5B%5D=Natuur%20en%20Milieu'
   num_pages:
     description: The number of pages to scrape
     type: int
