@@ -1,69 +1,31 @@
-name: pv_scraper
+name: pd_scraper
 services:
-  extract_pdf_text_component:
+  pd_speech_extractor_component:
     build:
       args: []
-      context: /Users/cas/Documents/political_agents/src/pipelines/components/scraper_components/extract_pdf_text_component
+      context: /Users/cas/Documents/political_agents/src/pipelines/components/scraper_components/pd_speech_extractor_component
     command:
     - --metadata
-    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
-      "pv_scraper-20240327162443", "component_id": "extract_pdf_text_component", "cache_key":
-      "f4019e936de2f950411108c92cf94757"}'
+    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
+      "pd_scraper-20240327175721", "component_id": "pd_speech_extractor_component",
+      "cache_key": "6384a0685d6f4b69c37c7c7ad734f1b4"}'
     - --output_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/extract_pdf_text_component/manifest.json
-    - --cache
-    - 'False'
-    - --cluster_type
-    - default
-    - --operation_spec
-    - '{"specification": {"name": "extract_pdf_text_component", "image": "extract_pdf_text_component:latest",
-      "description": "Custom reusable component to download the text from pdf download
-      links", "consumes": {"Download link href": {"type": "string"}}, "produces":
-      {"text": {"type": "string"}}}, "consumes": {}, "produces": {}}'
-    - --input_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/fetchlink_pv_component/manifest.json
-    depends_on:
-      fetchlink_pv_component:
-        condition: service_completed_successfully
-    entrypoint:
-    - fondant
-    - execute
-    - main
-    labels:
-      pipeline_description: null
-    ports:
-    - 8787:8787
-    volumes:
-    - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
-      target: /fondant-artifacts
-      type: bind
-    - /Users/cas/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/application_default_credentials.json
-  fetchlink_pv_component:
-    build:
-      args: []
-      context: /Users/cas/Documents/political_agents/src/pipelines/components/scraper_components/fetchlinks_pv_component
-    command:
-    - --metadata
-    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
-      "pv_scraper-20240327162443", "component_id": "fetchlink_pv_component", "cache_key":
-      "90523b15a2d60cb4ef8b7896f7d9b70a"}'
-    - --output_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/fetchlink_pv_component/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240327175721/pd_speech_extractor_component/manifest.json
     - --num_pages
-    - '10'
+    - '1'
     - --cache
     - 'False'
     - --cluster_type
     - default
     - --operation_spec
-    - '{"specification": {"name": "fetchlink_pv_component", "image": "fetchlink_pv_component:latest",
+    - '{"specification": {"name": "pd_speech_extractor_component", "image": "pd_speech_extractor_component:latest",
       "description": "Custom component to fetch all the links directing to the parliamentairy
       questions from the website of the flemish government", "produces": {"File Name":
       {"type": "string"}, "Card title": {"type": "string"}, "Document number": {"type":
-      "string"}, "View link text": {"type": "string"}, "View link href": {"type":
-      "string"}, "Download link text": {"type": "string"}, "Download link href": {"type":
-      "string"}}, "args": {"num_pages": {"description": "The number of pages to scrape",
-      "type": "int", "default": 1}}}, "consumes": {}, "produces": {}}'
+      "string"}, "Download link href": {"type": "string"}, "Profile": {"type": "string"},
+      "Title": {"type": "string"}, "Text": {"type": "string"}}, "args": {"num_pages":
+      {"description": "The number of pages to scrape", "type": "int", "default": 1}}},
+      "consumes": {}, "produces": {}}'
     depends_on: {}
     entrypoint:
     - fondant
@@ -77,59 +39,15 @@ services:
     - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
       target: /fondant-artifacts
       type: bind
-    - /Users/cas/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/application_default_credentials.json
-  regex_pv_component:
-    build:
-      args: []
-      context: /Users/cas/Documents/political_agents/src/pipelines/components/scraper_components/regex_pv_component
-    command:
-    - --metadata
-    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
-      "pv_scraper-20240327162443", "component_id": "regex_pv_component", "cache_key":
-      "283a2240b25cadfe2d2f10e8327be203"}'
-    - --output_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/regex_pv_component/manifest.json
-    - --cache
-    - 'False'
-    - --cluster_type
-    - default
-    - --operation_spec
-    - '{"specification": {"name": "regex_pv_component", "image": "regex_pv_component:latest",
-      "description": "This container is responsible for extracting key information
-      from the text of a Parliamentary Question.", "consumes": {"text": {"type": "string"}},
-      "produces": {"sender": {"type": "string"}, "responder": {"type": "string"},
-      "questions": {"type": "string"}, "answers": {"type": "string"}, "jurisdiction":
-      {"type": "string"}, "topic": {"type": "string"}, "date": {"type": "string"},
-      "number": {"type": "string"}}}, "consumes": {}, "produces": {}}'
-    - --input_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/extract_pdf_text_component/manifest.json
-    depends_on:
-      extract_pdf_text_component:
-        condition: service_completed_successfully
-    entrypoint:
-    - fondant
-    - execute
-    - main
-    labels:
-      pipeline_description: null
-    ports:
-    - 8787:8787
-    volumes:
-    - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
-      target: /fondant-artifacts
-      type: bind
-    - /Users/cas/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/application_default_credentials.json
   write_to_file:
     command:
     - --metadata
-    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pv_scraper", "run_id":
-      "pv_scraper-20240327162443", "component_id": "write_to_file", "cache_key": "1881ddcfccc4f8b0511c12dd1040bd02"}'
+    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
+      "pd_scraper-20240327175721", "component_id": "write_to_file", "cache_key": "94b01b8f8a9f05297e39d0ab17684f07"}'
     - --output_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/write_to_file/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240327175721/write_to_file/manifest.json
     - --path
-    - gs://cedar-talent-417009_scrape/pv
-    - --format
-    - parquet
+    - /data/export
     - --cache
     - 'True'
     - --cluster_type
@@ -148,9 +66,9 @@ services:
       is used. The CSV files contain the column as a header and use a comma as a delimiter.",
       "type": "str", "default": "parquet"}}}, "consumes": {}, "produces": {}}'
     - --input_manifest_path
-    - /fondant-artifacts/pv_scraper/pv_scraper-20240327162443/regex_pv_component/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240327175721/pd_speech_extractor_component/manifest.json
     depends_on:
-      regex_pv_component:
+      pd_speech_extractor_component:
         condition: service_completed_successfully
     entrypoint:
     - fondant
@@ -165,5 +83,4 @@ services:
     - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
       target: /fondant-artifacts
       type: bind
-    - /Users/cas/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/application_default_credentials.json
 version: '3.8'

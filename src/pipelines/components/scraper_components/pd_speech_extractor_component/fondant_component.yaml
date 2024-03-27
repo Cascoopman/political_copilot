@@ -1,0 +1,25 @@
+name: pd_speech_extractor_component
+description: Custom component to fetch all the links directing to the parliamentairy questions from the website of the flemish government
+image: pd_speech_extractor_component:latest
+
+produces:
+  File Name: 
+    type: "string"
+  Card title: 
+    type: "string"
+  Document number: 
+    type: "string"
+  Download link href: 
+    type: "string"
+  Profile:
+    type: "string"
+  Title:
+    type: "string"
+  Text:
+    type: "string"
+
+args:
+  num_pages:
+    description: The number of pages to scrape
+    type: int
+    default: 1
