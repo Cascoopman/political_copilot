@@ -7,12 +7,12 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
-      "pd_scraper-20240327175721", "component_id": "pd_speech_extractor_component",
-      "cache_key": "6384a0685d6f4b69c37c7c7ad734f1b4"}'
+      "pd_scraper-20240328112847", "component_id": "pd_speech_extractor_component",
+      "cache_key": "a6858f139dd19854b0f12e63dccc53a4"}'
     - --output_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240327175721/pd_speech_extractor_component/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240328112847/pd_speech_extractor_component/manifest.json
     - --num_pages
-    - '1'
+    - '5'
     - --cache
     - 'False'
     - --cluster_type
@@ -23,9 +23,9 @@ services:
       questions from the website of the flemish government", "produces": {"File Name":
       {"type": "string"}, "Card title": {"type": "string"}, "Document number": {"type":
       "string"}, "Download link href": {"type": "string"}, "Profile": {"type": "string"},
-      "Title": {"type": "string"}, "Text": {"type": "string"}}, "args": {"num_pages":
-      {"description": "The number of pages to scrape", "type": "int", "default": 1}}},
-      "consumes": {}, "produces": {}}'
+      "Faction": {"type": "string"}, "Title": {"type": "string"}, "Text": {"type":
+      "string"}}, "args": {"num_pages": {"description": "The number of pages to scrape",
+      "type": "int", "default": 1}}}, "consumes": {}, "produces": {}}'
     depends_on: {}
     entrypoint:
     - fondant
@@ -39,15 +39,16 @@ services:
     - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
       target: /fondant-artifacts
       type: bind
+    - /Users/cas/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/application_default_credentials.json
   write_to_file:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
-      "pd_scraper-20240327175721", "component_id": "write_to_file", "cache_key": "94b01b8f8a9f05297e39d0ab17684f07"}'
+      "pd_scraper-20240328112847", "component_id": "write_to_file", "cache_key": "e49c6a17dfe011b435b47b6dc1c522cc"}'
     - --output_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240327175721/write_to_file/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240328112847/write_to_file/manifest.json
     - --path
-    - /data/export
+    - gs://cedar-talent-417009_scrape/pd
     - --cache
     - 'True'
     - --cluster_type
@@ -66,7 +67,7 @@ services:
       is used. The CSV files contain the column as a header and use a comma as a delimiter.",
       "type": "str", "default": "parquet"}}}, "consumes": {}, "produces": {}}'
     - --input_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240327175721/pd_speech_extractor_component/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240328112847/pd_speech_extractor_component/manifest.json
     depends_on:
       pd_speech_extractor_component:
         condition: service_completed_successfully
@@ -83,4 +84,5 @@ services:
     - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
       target: /fondant-artifacts
       type: bind
+    - /Users/cas/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/application_default_credentials.json
 version: '3.8'

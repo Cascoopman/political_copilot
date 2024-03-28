@@ -13,6 +13,8 @@ produces:
     type: "string"
   Profile:
     type: "string"
+  Faction:
+    type: "string"
   Title:
     type: "string"
   Text:
