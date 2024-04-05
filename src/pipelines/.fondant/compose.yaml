@@ -1,5 +1,60 @@
 name: pd_scraper
 services:
+  chunk_text:
+    command:
+    - --metadata
+    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
+      "pd_scraper-20240405094437", "component_id": "chunk_text", "cache_key": "01fc5b2e720762aeb45b419aca33bbc1"}'
+    - --output_manifest_path
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240405094437/chunk_text/manifest.json
+    - --chunk_strategy
+    - RecursiveCharacterTextSplitter
+    - --chunk_kwargs
+    - '{"chunk_size": 512, "chunk_overlap": 40}'
+    - --cache
+    - 'True'
+    - --operation_spec
+    - '{"specification": {"name": "Chunk text", "image": "fndnt/chunk_text:0.11.2",
+      "description": "Component that chunks text into smaller segments \n\nThis component
+      takes a body of text and chunks into small chunks. The id of the returned dataset\nconsists
+      of the id of the original document followed by the chunk index.\n\nDifferent
+      chunking strategies can be used. The default is to use the \"recursive\" strategy
+      which\n  recursively splits the text into smaller chunks until the chunk size
+      is reached. \n\nMore information about the different chunking strategies can
+      be here:\n- https://python.langchain.com/docs/modules/data_connection/document_transformers/\n-
+      https://www.pinecone.io/learn/chunking-strategies/\n", "tags": ["Text processing"],
+      "consumes": {"text": {"type": "string"}}, "produces": {"text": {"type": "string"},
+      "original_document_id": {"type": "string"}}, "previous_index": "original_document_id",
+      "args": {"chunk_strategy": {"description": "The strategy to use for chunking
+      the text. One of [''RecursiveCharacterTextSplitter'', ''HTMLHeaderTextSplitter'',
+      ''CharacterTextSplitter'', ''Language'', ''MarkdownHeaderTextSplitter'', ''MarkdownTextSplitter'',
+      ''SentenceTransformersTokenTextSplitter'', ''LatexTextSplitter'', ''SpacyTextSplitter'',
+      ''TokenTextSplitter'', ''NLTKTextSplitter'', ''PythonCodeTextSplitter'', ''character'',
+      ''NLTK'', ''SpaCy'']", "type": "str", "default": "RecursiveCharacterTextSplitter"},
+      "chunk_kwargs": {"description": "The arguments to pass to the chunking strategy",
+      "type": "dict", "default": {}}, "language_text_splitter": {"description": "The
+      programming language to use for splitting text into sentences if \"language\"
+      is selected as the splitter. Check  https://python.langchain.com/docs/modules/data_connection/document_transformers/code_splitter
+      for more information on supported languages.", "type": "str", "default": "None"}}},
+      "consumes": {"text": {"type": "string"}}, "produces": {}}'
+    - --input_manifest_path
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240405094437/pd_speech_extractor_component/manifest.json
+    depends_on:
+      pd_speech_extractor_component:
+        condition: service_completed_successfully
+    entrypoint:
+    - fondant
+    - execute
+    - main
+    image: fndnt/chunk_text:0.11.2
+    labels:
+      pipeline_description: null
+    ports:
+    - 8787:8787
+    volumes:
+    - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
+      target: /fondant-artifacts
+      type: bind
   pd_speech_extractor_component:
     build:
       args: []
@@ -7,23 +62,20 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
-      "pd_scraper-20240328112847", "component_id": "pd_speech_extractor_component",
-      "cache_key": "a6858f139dd19854b0f12e63dccc53a4"}'
+      "pd_scraper-20240405094437", "component_id": "pd_speech_extractor_component",
+      "cache_key": "41572ff6b8592d51696a6e4eaccd9a61"}'
     - --output_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240328112847/pd_speech_extractor_component/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240405094437/pd_speech_extractor_component/manifest.json
     - --num_pages
-    - '5'
+    - '1'
     - --cache
-    - 'False'
-    - --cluster_type
-    - default
+    - 'True'
     - --operation_spec
-    - '{"specification": {"name": "pd_speech_extractor_component", "image": "pd_speech_extractor_component:latest",
-      "description": "Custom component to fetch all the links directing to the parliamentairy
-      questions from the website of the flemish government", "produces": {"File Name":
-      {"type": "string"}, "Card title": {"type": "string"}, "Document number": {"type":
-      "string"}, "Download link href": {"type": "string"}, "Profile": {"type": "string"},
-      "Faction": {"type": "string"}, "Title": {"type": "string"}, "Text": {"type":
+    - '{"specification": {"name": "pd_speech_extractor_component", "image": "pd_speech_extractor_component:1.0.0",
+      "description": "Custom component to extract all the speeches from the debates
+      on the website of the flemish government", "produces": {"card_title": {"type":
+      "string"}, "download_href": {"type": "string"}, "profile_href": {"type": "string"},
+      "faction": {"type": "string"}, "name": {"type": "string"}, "text": {"type":
       "string"}}, "args": {"num_pages": {"description": "The number of pages to scrape",
       "type": "int", "default": 1}}}, "consumes": {}, "produces": {}}'
     depends_on: {}
@@ -39,50 +91,4 @@ services:
     - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
       target: /fondant-artifacts
       type: bind
-    - /Users/cas/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/application_default_credentials.json
-  write_to_file:
-    command:
-    - --metadata
-    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
-      "pd_scraper-20240328112847", "component_id": "write_to_file", "cache_key": "e49c6a17dfe011b435b47b6dc1c522cc"}'
-    - --output_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240328112847/write_to_file/manifest.json
-    - --path
-    - gs://cedar-talent-417009_scrape/pd
-    - --cache
-    - 'True'
-    - --cluster_type
-    - default
-    - --operation_spec
-    - '{"specification": {"name": "Write to file", "image": "fndnt/write_to_file:0.10.1",
-      "description": "A Fondant component to write a dataset to file on a local machine
-      or to a cloud storage bucket. The dataset can be written as csv or parquet.",
-      "tags": ["Data writing"], "consumes": {"additionalProperties": true}, "args":
-      {"path": {"description": "Path to store the dataset, whether it''s a local path
-      or a cloud storage bucket,  must be specified. A separate filename will be generated
-      for each partition. If you are using the local runner and export the data to
-      a local directory,  ensure that you mount the path to the directory using the
-      `--extra-volumes` argument.", "type": "str"}, "format": {"description": "Format
-      for storing the dataframe can be either `csv` or `parquet`. As default  `parquet`
-      is used. The CSV files contain the column as a header and use a comma as a delimiter.",
-      "type": "str", "default": "parquet"}}}, "consumes": {}, "produces": {}}'
-    - --input_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240328112847/pd_speech_extractor_component/manifest.json
-    depends_on:
-      pd_speech_extractor_component:
-        condition: service_completed_successfully
-    entrypoint:
-    - fondant
-    - execute
-    - main
-    image: fndnt/write_to_file:0.10.1
-    labels:
-      pipeline_description: null
-    ports:
-    - 8787:8787
-    volumes:
-    - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
-      target: /fondant-artifacts
-      type: bind
-    - /Users/cas/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/application_default_credentials.json
 version: '3.8'

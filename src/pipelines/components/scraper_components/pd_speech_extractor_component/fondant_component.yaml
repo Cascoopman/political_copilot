@@ -1,23 +1,19 @@
 name: pd_speech_extractor_component
-description: Custom component to fetch all the links directing to the parliamentairy questions from the website of the flemish government
-image: pd_speech_extractor_component:latest
+description: Custom component to extract all the speeches from the debates on the website of the flemish government
+image: pd_speech_extractor_component:1.0.0
 
 produces:
-  File Name: 
+  card_title: 
     type: "string"
-  Card title: 
+  download_href: 
     type: "string"
-  Document number: 
+  profile_href:
     type: "string"
-  Download link href: 
+  faction:
     type: "string"
-  Profile:
+  name:
     type: "string"
-  Faction:
-    type: "string"
-  Title:
-    type: "string"
-  Text:
+  text:
     type: "string"
 
 args:

@@ -32,6 +32,7 @@ class FetchLinks(DaskLoadComponent):
             data.extend(self.fetch_document_info(page_number))
 
         df = pd.DataFrame(data)
+        
         return dd.from_pandas(df, npartitions=1)
     
     def fetch_document_info(self, page_number):
@@ -86,50 +87,50 @@ class FetchLinks(DaskLoadComponent):
                         profile = "https://www.vlaamsparlement.be"+reference['href']
                     else:
                         profile = ""
-                    title = title_div.text
+                    name = title_div.text
                 else:
-                    profile, title = "", ""
+                    profile, name = "", ""
                 
-                # Drop De voorzitter and empty titles
-                if title == "De voorzitter" or title == "":
+                # Drop De voorzitter and empty names
+                if name == "De voorzitter" or name == "":
                     continue
                 
                 # Extract which faction the person belongs to
                 pattern = r'\((.*?)\)'
-                matches = re.search(pattern, title)
+                matches = re.search(pattern, name)
                 if matches:
                     faction = matches.group(1)
                 else:
                     faction = ""
                 
-                # If the faction is not found in the title, the person is part of the regering 2019-2024
+                # If the faction is not found in the name, the person is part of the regering 2019-2024
                 if faction == "" and profile == "":
-                    name_parts = title.split(' ')[1:]
+                    name_parts = name.split(' ')[1:]
                     # Join the name parts with '-'
                     formatted_name = '-'.join(name_parts).lower()
                     profile = f"https://www.vlaanderen.be/vlaamse-regering/{formatted_name}"
                     try:
                         faction = self.regering[formatted_name]
                     except KeyError:
-                        print(f"Could not find faction name for {title}, {download_href}")
+                        print(f"Could not find faction name for {name}, {download_href}")
                         faction = ""
                 
-                # Some outliers are not part of the regering but their title didn't contain a profile link yet 
+                # Some outliers are not part of the regering but their name didn't contain a profile link yet 
                 if profile == "":
-                    name_parts = title.split(' ')[1:]
+                    name_parts = name.split(' ')[1:]
                     # Join the name parts with '-'
                     formatted_name = '-'.join(name_parts).lower()
                     profile = f"https://www.vlaamsparlement.be/nl/vlaamse-volksvertegenwoordigers-het-vlaams-parlement/{formatted_name}"
 
-                # Some outliers were part of the regering 2019-2024 but did have a profile link in their title
+                # Some outliers were part of the regering 2019-2024 but did have a profile link in their name
                 if faction == "":
-                    name_parts = title.split(' ')[1:]
+                    name_parts = name.split(' ')[1:]
                     # Join the name parts with '-'
                     formatted_name = '-'.join(name_parts).lower()     
                     try:
                         faction = self.regering[formatted_name]
                     except KeyError:
-                        print(f"Could not find faction name for {title}, {download_href}")
+                        print(f"Could not find faction name for {name}, {download_href}")
                         faction = ""
                 
                 # For each speech, extract the text grouped in paragraphs
@@ -146,14 +147,12 @@ class FetchLinks(DaskLoadComponent):
                 
                 # Append to the database
                 data.append({
-                    'File Name': file_name,
-                    'Card title': card_title, 
-                    'Document number': doc_number, 
-                    'Download link href': download_href,
-                    'Profile': profile,
-                    'Faction': faction,
-                    'Title': title,
-                    'Text': text
+                    'card_title': card_title, 
+                    'download_href': download_href,
+                    'profile_href': profile,
+                    'faction': faction,
+                    'name': name,
+                    'text': text
                     })
 
         return data
