@@ -25,6 +25,18 @@ class FetchLinks(DaskLoadComponent):
     def get_pages(self):
         return self.pages
     
+    @staticmethod
+    def _set_unique_index(dataframe: pd.DataFrame):
+        """Function that sets a unique index based on the partition and row number."""
+        n_digits = len(str(len(dataframe)))
+
+        dataframe["id"] = 1
+        dataframe["id"] = (
+            dataframe.id.cumsum().astype(str).str.zfill(n_digits)
+        )
+        
+        return dataframe.set_index("id", drop=True)
+    
     def load(self) -> dd.DataFrame:
         data = []
 
@@ -33,7 +45,9 @@ class FetchLinks(DaskLoadComponent):
 
         df = pd.DataFrame(data)
         
-        return dd.from_pandas(df, npartitions=1)
+        df_with_index = self._set_unique_index(df)
+        
+        return dd.from_pandas(df_with_index, npartitions=1)
     
     def fetch_document_info(self, page_number):
         data = []
@@ -53,7 +67,7 @@ class FetchLinks(DaskLoadComponent):
         articles = soup.find_all('article', class_='card card--document')
 
         # Iterate over each article to extract the debate information
-        for article in articles:
+        for article in articles[:2]:
             card_title = article.find('h3', class_='card__title').get_text()
             download_link = article.find('li', class_='card__link card__link-download')
             doc_number = article.find('span', class_='card__document-number').get_text()

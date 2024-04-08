@@ -1,0 +1,25 @@
+name: pd_write_embeddings
+description: Component that writes the embeddings to the correct vector search format.
+image: pd_write_embeddings:latest
+
+consumes:
+  faction:
+    type: string
+  embedding:
+    type: array
+    items:
+      type: float32  
+
+produces:
+  status:
+    type: string
+
+args:
+  bucket_name:
+    description: >- 
+      Path to the gcp bucket where the embeddings will be stored.
+    type: str
+  json_file_name:
+    description: >- 
+      Name of the json file.
+    type: str

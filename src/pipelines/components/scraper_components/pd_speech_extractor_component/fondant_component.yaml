@@ -1,6 +1,6 @@
 name: pd_speech_extractor_component
 description: Custom component to extract all the speeches from the debates on the website of the flemish government
-image: pd_speech_extractor_component:1.0.0
+image: pd_speech_extractor_component:0.0.1
 
 produces:
   card_title: 

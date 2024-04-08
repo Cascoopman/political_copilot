@@ -27,7 +27,7 @@ speeches = pipeline.read(
 speeches.write(
     "write_to_file", 
     arguments={
-        "path": "gs://cedar-talent-417009_scrape/pd"
+        "path": "//pd"
     },
     consumes={
         "File Name": pa.string(),
@@ -43,12 +43,32 @@ speeches.write(
 '''
 
 chunked = speeches.apply(
-    "chunk_text",
+    "components/scraper_components/pd_chunk_text",
     arguments={
         "chunk_strategy": "RecursiveCharacterTextSplitter",
         "chunk_kwargs": {
             "chunk_size": 512,
             "chunk_overlap": 40,
         },
+    },
+)
+
+embedded = chunked.apply(
+    "components/scraper_components/pd_embed_text",
+    arguments={
+        "model_provider": "openai",
+        "model": "text-embedding-3-small",
+        "api_keys": {
+            "OPENAI_API_KEY": "//",
+            },
+        "auth_kwargs": {},
+    },
+)
+
+embedded.apply(
+    "components/scraper_components/pd_write_embeddings",
+    arguments={
+        "bucket_name": "//_embed",
+        "json_file_name": "pd/embeddings.json",
     },
 )
