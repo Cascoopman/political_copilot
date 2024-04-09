@@ -7,7 +7,7 @@
 
 terraform {
   backend "gcs" {
-    bucket = "to-be-decided_terraform"
+    bucket = "cedar-talent-417009_terraform"
     prefix = "terraform/state"
   }
 }
