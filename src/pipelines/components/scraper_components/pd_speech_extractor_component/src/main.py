@@ -28,12 +28,9 @@ class FetchLinks(DaskLoadComponent):
     @staticmethod
     def _set_unique_index(dataframe: pd.DataFrame):
         """Function that sets a unique index based on the partition and row number."""
-        n_digits = len(str(len(dataframe)))
-
-        dataframe["id"] = 1
-        dataframe["id"] = (
-            dataframe.id.cumsum().astype(str).str.zfill(n_digits)
-        )
+        dataframe['id'] = range(1, len(dataframe) + 1)
+        
+        dataframe["id"] = dataframe["id"].astype("int64")
         
         return dataframe.set_index("id", drop=True)
     

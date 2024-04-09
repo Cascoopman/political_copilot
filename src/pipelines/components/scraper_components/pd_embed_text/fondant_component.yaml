@@ -1,16 +1,20 @@
 name: pd_embed_text
 description: Component that generates embeddings of text passages.
-image: pd_embed_text:latest
+image: pd_embed_text:9.9.9
 
 consumes:
   text:
     type: string
+  faction:
+    type: string  
 
 produces:
   embedding:
     type: array
     items:
       type: float32
+  faction:
+    type: string
     
 
 args:

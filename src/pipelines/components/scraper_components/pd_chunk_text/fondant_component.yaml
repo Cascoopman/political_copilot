@@ -20,7 +20,7 @@ produces:
   text:
     type: string
   original_document_id:
-    type: string
+    type: int64
   card_title:
     type: string
   download_href:
@@ -32,7 +32,7 @@ produces:
   faction:
     type: string
 
-previous_index: original_document_id
+#previous_index: original_document_id
 
 args:
   chunk_strategy:

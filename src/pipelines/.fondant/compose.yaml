@@ -1,12 +1,15 @@
 name: pd_scraper
 services:
-  chunk_text:
+  pd_chunk_text:
+    build:
+      args: []
+      context: /Users/cas/Documents/political_agents/src/pipelines/components/scraper_components/pd_chunk_text
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
-      "pd_scraper-20240405094437", "component_id": "chunk_text", "cache_key": "01fc5b2e720762aeb45b419aca33bbc1"}'
+      "pd_scraper-20240409144026", "component_id": "pd_chunk_text", "cache_key": "95bd087e0bd25e82145a790e87d23b0a"}'
     - --output_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240405094437/chunk_text/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240409144026/pd_chunk_text/manifest.json
     - --chunk_strategy
     - RecursiveCharacterTextSplitter
     - --chunk_kwargs
@@ -14,19 +17,15 @@ services:
     - --cache
     - 'True'
     - --operation_spec
-    - '{"specification": {"name": "Chunk text", "image": "fndnt/chunk_text:0.11.2",
-      "description": "Component that chunks text into smaller segments \n\nThis component
-      takes a body of text and chunks into small chunks. The id of the returned dataset\nconsists
-      of the id of the original document followed by the chunk index.\n\nDifferent
-      chunking strategies can be used. The default is to use the \"recursive\" strategy
-      which\n  recursively splits the text into smaller chunks until the chunk size
-      is reached. \n\nMore information about the different chunking strategies can
-      be here:\n- https://python.langchain.com/docs/modules/data_connection/document_transformers/\n-
-      https://www.pinecone.io/learn/chunking-strategies/\n", "tags": ["Text processing"],
-      "consumes": {"text": {"type": "string"}}, "produces": {"text": {"type": "string"},
-      "original_document_id": {"type": "string"}}, "previous_index": "original_document_id",
-      "args": {"chunk_strategy": {"description": "The strategy to use for chunking
-      the text. One of [''RecursiveCharacterTextSplitter'', ''HTMLHeaderTextSplitter'',
+    - '{"specification": {"name": "pd_chunk_text", "image": "pd_chunk_text:0.0.12",
+      "description": "Component that chunks text into smaller segments", "consumes":
+      {"text": {"type": "string"}, "card_title": {"type": "string"}, "download_href":
+      {"type": "string"}, "profile_href": {"type": "string"}, "name": {"type": "string"},
+      "faction": {"type": "string"}}, "produces": {"text": {"type": "string"}, "original_document_id":
+      {"type": "int64"}, "card_title": {"type": "string"}, "download_href": {"type":
+      "string"}, "profile_href": {"type": "string"}, "name": {"type": "string"}, "faction":
+      {"type": "string"}}, "args": {"chunk_strategy": {"description": "The strategy
+      to use for chunking the text. One of [''RecursiveCharacterTextSplitter'', ''HTMLHeaderTextSplitter'',
       ''CharacterTextSplitter'', ''Language'', ''MarkdownHeaderTextSplitter'', ''MarkdownTextSplitter'',
       ''SentenceTransformersTokenTextSplitter'', ''LatexTextSplitter'', ''SpacyTextSplitter'',
       ''TokenTextSplitter'', ''NLTKTextSplitter'', ''PythonCodeTextSplitter'', ''character'',
@@ -36,9 +35,11 @@ services:
       programming language to use for splitting text into sentences if \"language\"
       is selected as the splitter. Check  https://python.langchain.com/docs/modules/data_connection/document_transformers/code_splitter
       for more information on supported languages.", "type": "str", "default": "None"}}},
-      "consumes": {"text": {"type": "string"}}, "produces": {}}'
+      "consumes": {"text": {"type": "string"}, "card_title": {"type": "string"}, "download_href":
+      {"type": "string"}, "profile_href": {"type": "string"}, "name": {"type": "string"},
+      "faction": {"type": "string"}}, "produces": {}}'
     - --input_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240405094437/pd_speech_extractor_component/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240409144026/pd_speech_extractor_component/manifest.json
     depends_on:
       pd_speech_extractor_component:
         condition: service_completed_successfully
@@ -46,7 +47,61 @@ services:
     - fondant
     - execute
     - main
-    image: fndnt/chunk_text:0.11.2
+    labels:
+      pipeline_description: null
+    ports:
+    - 8787:8787
+    volumes:
+    - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
+      target: /fondant-artifacts
+      type: bind
+  pd_embed_text:
+    build:
+      args: []
+      context: /Users/cas/Documents/political_agents/src/pipelines/components/scraper_components/pd_embed_text
+    command:
+    - --metadata
+    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
+      "pd_scraper-20240409144026", "component_id": "pd_embed_text", "cache_key": "436152fd1a6202d12f734d03adc1e584"}'
+    - --output_manifest_path
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240409144026/pd_embed_text/manifest.json
+    - --model_provider
+    - openai
+    - --model
+    - text-embedding-3-small
+    - --api_keys
+    - '{"OPENAI_API_KEY": "//"}'
+    - --auth_kwargs
+    - '{}'
+    - --cache
+    - 'True'
+    - --operation_spec
+    - '{"specification": {"name": "pd_embed_text", "image": "pd_embed_text:9.9.9",
+      "description": "Component that generates embeddings of text passages.", "consumes":
+      {"text": {"type": "string"}, "faction": {"type": "string"}}, "produces": {"embedding":
+      {"type": "array", "items": {"type": "float32"}}, "faction": {"type": "string"}},
+      "args": {"model_provider": {"description": "The provider of the model - corresponding
+      to langchain embedding classes. \nCurrently the following providers are supported:
+      aleph_alpha, cohere, huggingface, openai, \nvertexai.\n", "type": "str", "default":
+      "huggingface"}, "model": {"description": "The model to generate embeddings from.
+      \nChoose an available model name to pass to the model provider''s langchain
+      embedding class.\n", "type": "str", "default": "None"}, "api_keys": {"description":
+      "The API keys to use for the model provider that are written to environment
+      variables.\nPass only the keys required by the model provider or conveniently
+      pass all keys you will ever need. \nPay attention how to name the dictionary
+      keys so that they can be used by the model provider.\n", "type": "dict", "default":
+      {}}, "auth_kwargs": {"description": "Additional keyword arguments required for
+      api initialization/authentication.\n", "type": "dict", "default": {}}}}, "consumes":
+      {"text": {"type": "string"}, "faction": {"type": "string"}}, "produces": {}}'
+    - --input_manifest_path
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240409144026/pd_chunk_text/manifest.json
+    depends_on:
+      pd_chunk_text:
+        condition: service_completed_successfully
+    entrypoint:
+    - fondant
+    - execute
+    - main
     labels:
       pipeline_description: null
     ports:
@@ -62,16 +117,16 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
-      "pd_scraper-20240405094437", "component_id": "pd_speech_extractor_component",
-      "cache_key": "41572ff6b8592d51696a6e4eaccd9a61"}'
+      "pd_scraper-20240409144026", "component_id": "pd_speech_extractor_component",
+      "cache_key": "116f5938278cef831578bf59a16e729e"}'
     - --output_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240405094437/pd_speech_extractor_component/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240409144026/pd_speech_extractor_component/manifest.json
     - --num_pages
     - '1'
     - --cache
     - 'True'
     - --operation_spec
-    - '{"specification": {"name": "pd_speech_extractor_component", "image": "pd_speech_extractor_component:1.0.0",
+    - '{"specification": {"name": "pd_speech_extractor_component", "image": "pd_speech_extractor_component:0.0.1",
       "description": "Custom component to extract all the speeches from the debates
       on the website of the flemish government", "produces": {"card_title": {"type":
       "string"}, "download_href": {"type": "string"}, "profile_href": {"type": "string"},

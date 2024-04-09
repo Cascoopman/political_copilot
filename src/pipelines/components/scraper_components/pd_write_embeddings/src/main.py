@@ -2,6 +2,7 @@ import pandas as pd
 from fondant.component import PandasTransformComponent
 import json
 from google.cloud import storage
+import os
 
 class WriteToBucket(PandasTransformComponent):
     def __init__(self, *, bucket_name: str, json_file_name: str):
@@ -16,12 +17,13 @@ class WriteToBucket(PandasTransformComponent):
         to a remote storage bucket.
 
         """
-        dataframe['id'] = dataframe['id'].astype(str)
         json_records = WriteToBucket.create_json_records(dataframe)
+        dataframe['embedding'] = dataframe['embedding'].apply(lambda x: x.tolist())
         
-        output_file_path = 'tmp/embeddings.json'
-        
-        json_file = WriteToBucket.create_json_file(json_records, output_file_path)
+        output_file_path = 'tmp/'
+        os.makedirs(output_file_path, exist_ok=True)
+        json_file_path = os.path.join(output_file_path, "embeddings.json")
+        json_file = WriteToBucket.create_json_file(json_records, json_file_path)
         
         gcp_client = storage.Client()
 
@@ -32,19 +34,20 @@ class WriteToBucket(PandasTransformComponent):
         embed_blob.upload_from_string(json_file)
         
         return pd.DataFrame({'status': ['We fucking did it baby']})
-        
+            
     def create_json_records(df):
         json_records = []
         for index, row in df.iterrows():
             
             # Create JSON record
             record = {
-                'index': row.name,
-                'embedding': row['embedding'],  # Convert embedding array to list
-                "restricts": [ 
+                "id": row["doc_id"],
+                "embedding": row["embedding"],
+                "restricts": [
                         {
                             "namespace": "faction",
-                            "allow": [row['faction']],
+                            "allow": [row["faction"]]
+                        },{
                             "namespace": "source",
                             "allow": ["PD"],
                         }
@@ -54,13 +57,14 @@ class WriteToBucket(PandasTransformComponent):
         
         return json_records
 
-    def create_json_file(json_records, output_file_path):
-        with open(output_file_path, 'w', encoding='utf-8') as f:
+    def create_json_file(json_records, json_file_path):
+    
+        with open(json_file_path, 'w', encoding='utf-8') as f:
             for record in json_records:
-                json.dump(record, f)
-                f.write('\n')
+                json_string = json.dumps(record)
+                f.write(json_string + '\n')
         
-        with open(output_file_path, 'r', encoding='utf-8') as f:
+        with open(json_file_path, 'r', encoding='utf-8') as f:
             jsonl_content = f.read()
         
         return jsonl_content

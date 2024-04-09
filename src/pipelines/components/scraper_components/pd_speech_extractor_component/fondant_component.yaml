@@ -4,17 +4,17 @@ image: pd_speech_extractor_component:0.0.1
 
 produces:
   card_title: 
-    type: "string"
+    type: string
   download_href: 
-    type: "string"
+    type: string
   profile_href:
-    type: "string"
+    type: string
   faction:
-    type: "string"
+    type: string
   name:
-    type: "string"
+    type: string
   text:
-    type: "string"
+    type: string
 
 args:
   num_pages:

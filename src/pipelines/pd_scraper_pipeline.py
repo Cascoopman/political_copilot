@@ -1,7 +1,6 @@
 from pathlib import Path
 from fondant.pipeline import Pipeline
 import os
-import pyarrow as pa
 
 BASE_PATH = "./fondant-artifacts"
 Path(BASE_PATH).mkdir(parents=True, exist_ok=True)
@@ -22,26 +21,7 @@ speeches = pipeline.read(
     }
 )
 
-'''
-# STEP 2: STORE THE DATA IN A GCP BUCKET
-speeches.write(
-    "write_to_file", 
-    arguments={
-        "path": "//pd"
-    },
-    consumes={
-        "File Name": pa.string(),
-        "Card title": pa.string(),
-        "Document number": pa.string(),
-        "Download link href": pa.string(),
-        "Profile": pa.string(),
-        "Faction": pa.string(),
-        "Title": pa.string(),
-        "Text": pa.string(),
-    }
-)
-'''
-
+# STEP 3: CHUNK THE TEXT
 chunked = speeches.apply(
     "components/scraper_components/pd_chunk_text",
     arguments={
@@ -53,6 +33,7 @@ chunked = speeches.apply(
     },
 )
 
+# STEP 4: EMBED THE TEXT
 embedded = chunked.apply(
     "components/scraper_components/pd_embed_text",
     arguments={
@@ -62,13 +43,5 @@ embedded = chunked.apply(
             "OPENAI_API_KEY": "//",
             },
         "auth_kwargs": {},
-    },
-)
-
-embedded.apply(
-    "components/scraper_components/pd_write_embeddings",
-    arguments={
-        "bucket_name": "//_embed",
-        "json_file_name": "pd/embeddings.json",
     },
 )

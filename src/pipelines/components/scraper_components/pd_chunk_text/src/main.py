@@ -143,7 +143,8 @@ class ChunkTextComponent(PandasTransformComponent):
 
     def transform(self, dataframe: pd.DataFrame) -> pd.DataFrame:
         logger.info(f"Chunking {len(dataframe)} documents...")
-
+        logger.info('---' * 50)
+        logger.info(dataframe.index.dtype)
         results = dataframe.apply(
             self.chunk_text,
             axis=1,
@@ -155,9 +156,16 @@ class ChunkTextComponent(PandasTransformComponent):
         # Turn into dataframes
         results_df = pd.DataFrame(
             results,
-            columns=["original_document_id", "id", "text", "card_title", "download_href", "profile_href", "name", "faction"],
+            columns=["original_document_id", "doc_id", "text", "card_title", "download_href", "profile_href", "name", "faction"],
         )
-        results_df["id"] = results_df["id"].astype(str)
-        results_df = results_df.set_index("id", drop=False)
         
-        return results_df
+        results_df['id'] = range(1, len(results_df) + 1)
+        
+        results_df["id"] = results_df["id"].astype("int64")
+        
+        result_df = results_df.set_index("id", drop=True)
+        
+        logger.info('+++' * 50)
+        logger.info(results_df.index.dtype)
+        
+        return result_df
