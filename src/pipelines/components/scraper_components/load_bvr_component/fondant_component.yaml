@@ -1,3 +1,21 @@
 name: load_bvr_component
 description: Custom component to load the decisions of the flemish government
 image: load_bvr_component:latest
+
+consumes:
+
+produces: 
+  type:
+    type: "string"
+  title:
+    type: "string"
+  htmlContent:
+    type: "string"
+  meetingDate:
+    type: "string"
+  mandateeNames:
+    type: "string"
+  mandateeTitles:
+    type: "string"
+  uri:
+    type: "string"

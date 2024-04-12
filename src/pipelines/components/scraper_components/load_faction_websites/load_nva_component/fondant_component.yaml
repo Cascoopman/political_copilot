@@ -1,0 +1,16 @@
+name: load_nva_component
+description: Custom component to load the agenda points of the NVA
+image: load_nva_component:latest
+
+consumes:
+
+produces: 
+  title:
+    type: "string"
+  subtitle:
+    type: "string"
+  content:
+    type: "string"
+  uri:
+    type: "string"
+  

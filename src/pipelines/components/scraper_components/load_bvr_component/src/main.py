@@ -39,39 +39,18 @@ class LoadBVR(DaskLoadComponent):
 
         if data:
             for item in data['data']:
+                print(item)
                 news_items.append({
                     'id': item['id'],
-                    'Type': item['type'],
-                    'Title': item['attributes']['title']
+                    'type': item['type'],
+                    'title': item['attributes']['title'],
+                    'position': item['attributes']['position'],
+                    'htmlContent': item['attributes']['htmlContent'],
+                    'meetingDate': item['attributes']['meetingDate'],
+                    'mandateeNames': item['attributes']['mandateeFirstNames'] + ' ' + item['attributes']['mandateeFamilyNames'],
+                    'mandateeTitles': ', '.join(item['attributes']['mandateeTitles']),
+                    'htmlContent': item['attributes']['htmlContent'],
+                    'uri': item['attributes']['uri']
                 })
 
         return dd.from_pandas(pd.DataFrame(news_items), npartitions=1)
-        
-
-# class NewsItem:
-#     def __init__(self, type, id, attributes,raw_json):
-#         self.type = type
-#         self.id = id
-#         self.attributes = attributes
-#         self.raw_json = raw_json
-
-# class NewsAttributes:
-#     def __init__(self, title, alternativeTitle, htmlContent, position, mandateeNames, mandateeFirstNames,
-#                  mandateeFamilyNames, mandateeIds, mandateeTitles, meetingDate, meetingId, meetingTypePosition,
-#                  themeId, agendaitemType, uuid, uri):
-#         self.title = title
-#         self.alternativeTitle = alternativeTitle
-#         self.htmlContent = htmlContent
-#         self.position = position
-#         self.mandateeNames = mandateeNames
-#         self.mandateeFirstNames = mandateeFirstNames
-#         self.mandateeFamilyNames = mandateeFamilyNames
-#         self.mandateeIds = mandateeIds
-#         self.mandateeTitles = mandateeTitles
-#         self.meetingDate = meetingDate
-#         self.meetingId = meetingId
-#         self.meetingTypePosition = meetingTypePosition
-#         self.themeId = themeId
-#         self.agendaitemType = agendaitemType
-#         self.uuid = uuid
-#         self.uri = uri
