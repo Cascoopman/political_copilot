@@ -40,8 +40,12 @@ embedded = chunked.apply(
         "model_provider": "openai",
         "model": "text-embedding-3-small",
         "api_keys": {
-            "OPENAI_API_KEY": "//",
+            "OPENAI_API_KEY": "\\",
             },
         "auth_kwargs": {},
     },
 )
+
+# STEP 5: WRITE THE CHUNKS AND EMBEDDINGS TO GCP
+# TODO: Implement this step within fondant
+# In the mean time you can the helper file manual_data_writer.py

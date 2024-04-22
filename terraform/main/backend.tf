@@ -7,7 +7,7 @@
 
 terraform {
   backend "gcs" {
-    bucket = "cedar-talent-417009_terraform"
+    bucket = "${var.project}_terraform"
     prefix = "terraform/state"
   }
 }

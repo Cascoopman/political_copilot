@@ -7,15 +7,17 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
-      "pd_scraper-20240409144026", "component_id": "pd_chunk_text", "cache_key": "95bd087e0bd25e82145a790e87d23b0a"}'
+      "pd_scraper-20240417152701", "component_id": "pd_chunk_text", "cache_key": "e183260ef18c0c364683fb39b0819663"}'
     - --output_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240409144026/pd_chunk_text/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240417152701/pd_chunk_text/manifest.json
     - --chunk_strategy
     - RecursiveCharacterTextSplitter
     - --chunk_kwargs
     - '{"chunk_size": 512, "chunk_overlap": 40}'
     - --cache
     - 'True'
+    - --cluster_type
+    - default
     - --operation_spec
     - '{"specification": {"name": "pd_chunk_text", "image": "pd_chunk_text:0.0.12",
       "description": "Component that chunks text into smaller segments", "consumes":
@@ -35,11 +37,9 @@ services:
       programming language to use for splitting text into sentences if \"language\"
       is selected as the splitter. Check  https://python.langchain.com/docs/modules/data_connection/document_transformers/code_splitter
       for more information on supported languages.", "type": "str", "default": "None"}}},
-      "consumes": {"text": {"type": "string"}, "card_title": {"type": "string"}, "download_href":
-      {"type": "string"}, "profile_href": {"type": "string"}, "name": {"type": "string"},
-      "faction": {"type": "string"}}, "produces": {}}'
+      "consumes": {}, "produces": {}}'
     - --input_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240409144026/pd_speech_extractor_component/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240417152701/pd_speech_extractor_component/manifest.json
     depends_on:
       pd_speech_extractor_component:
         condition: service_completed_successfully
@@ -62,19 +62,21 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
-      "pd_scraper-20240409144026", "component_id": "pd_embed_text", "cache_key": "436152fd1a6202d12f734d03adc1e584"}'
+      "pd_scraper-20240417152701", "component_id": "pd_embed_text", "cache_key": "d996ea0d79dd988f60565db1c6ab5c74"}'
     - --output_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240409144026/pd_embed_text/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240417152701/pd_embed_text/manifest.json
     - --model_provider
     - openai
     - --model
     - text-embedding-3-small
     - --api_keys
-    - '{"OPENAI_API_KEY": "//"}'
+    - '{"OPENAI_API_KEY": "\\"}'
     - --auth_kwargs
     - '{}'
     - --cache
     - 'True'
+    - --cluster_type
+    - default
     - --operation_spec
     - '{"specification": {"name": "pd_embed_text", "image": "pd_embed_text:9.9.9",
       "description": "Component that generates embeddings of text passages.", "consumes":
@@ -92,9 +94,9 @@ services:
       keys so that they can be used by the model provider.\n", "type": "dict", "default":
       {}}, "auth_kwargs": {"description": "Additional keyword arguments required for
       api initialization/authentication.\n", "type": "dict", "default": {}}}}, "consumes":
-      {"text": {"type": "string"}, "faction": {"type": "string"}}, "produces": {}}'
+      {}, "produces": {}}'
     - --input_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240409144026/pd_chunk_text/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240417152701/pd_chunk_text/manifest.json
     depends_on:
       pd_chunk_text:
         condition: service_completed_successfully
@@ -117,14 +119,16 @@ services:
     command:
     - --metadata
     - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
-      "pd_scraper-20240409144026", "component_id": "pd_speech_extractor_component",
-      "cache_key": "116f5938278cef831578bf59a16e729e"}'
+      "pd_scraper-20240417152701", "component_id": "pd_speech_extractor_component",
+      "cache_key": "d87ef1b041b51332e9e542d56117ce99"}'
     - --output_manifest_path
-    - /fondant-artifacts/pd_scraper/pd_scraper-20240409144026/pd_speech_extractor_component/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240417152701/pd_speech_extractor_component/manifest.json
     - --num_pages
     - '1'
     - --cache
     - 'True'
+    - --cluster_type
+    - default
     - --operation_spec
     - '{"specification": {"name": "pd_speech_extractor_component", "image": "pd_speech_extractor_component:0.0.1",
       "description": "Custom component to extract all the speeches from the debates

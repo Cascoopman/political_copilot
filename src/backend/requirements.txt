@@ -1,0 +1,9 @@
+fastapi
+pydantic
+uvicorn
+openai
+google.cloud.storage
+google.cloud.aiplatform
+pandas
+pyarrow
+pyautogen

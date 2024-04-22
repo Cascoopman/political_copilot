@@ -1,6 +1,14 @@
 # Do not upload all the scraped data
 src/pipelines/fondant-artifacts
 tmp/
+data/ 
+
+# Nimbus
+*.ini
+
+# OpenAI Key
+OAI_CONFIG_LIST.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

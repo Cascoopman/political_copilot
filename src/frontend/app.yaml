@@ -1,0 +1,17 @@
+runtime: python
+env: flex
+
+entrypoint: streamlit run main.py --server.port $PORT
+
+runtime_config:
+    operating_system: "ubuntu22"
+    runtime_version: "3.12"
+
+network:
+  instance_ip_mode: internal
+  name: main-network
+  subnetwork_name: europe-west1
+
+vpc_access_connector:
+  name: "projects/$GCP_PROJECT_NAME/locations/europe-west1/connectors/europe-west1"
+  egress_setting: all-traffic

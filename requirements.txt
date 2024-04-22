@@ -1,3 +1,17 @@
 bandit==1.7.1
 pylint==2.5.3
 liccheck==0.6.5
+fondant==0.10.1
+fastapi==0.109.2
+pydantic==1.10.12
+uvicorn==0.27.1
+openai==1.12.0
+google.cloud.storage==2.14.0
+google.cloud.aiplatform==1.46.0
+pandas==2.1.4
+pyarrow==15.0.2
+pyautogen==0.2.14
+st-star-rating==0.0.6
+streamlit==1.33.0
+requests==2.31.0
+google-auth==2.28.0

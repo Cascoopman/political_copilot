@@ -12,10 +12,8 @@ pipeline = Pipeline(
     base_path=BASE_PATH,
 )
 # STEP 1: FETCH THE PDF DOWNLOAD LINKS
-# Use a custom reusable (container) component to fetch the links
-# Todo: make lightweight component into a container
-# OR: Directly use a custom lightweight component to fetch the links
-
+# Num pages set to 10 for demo purposes
+# Manually check
 links = pipeline.read(
     "components/scraper_components/fetchlinks_pv_component",
     arguments={
@@ -24,25 +22,20 @@ links = pipeline.read(
 )
 
 # STEP 2: DOWNLOAD THE CONTENT OF THE PDFS USING THE LINKS
-# Use the reusable component to load the remote pdfs
 raw_data = links.apply(
     "components/scraper_components/extract_pdf_text_component",
 )
 
 # STEP 3: EXTRACT AND STRUCTURE THE TEXT USING REGEX
-# Use the reusable component to structure the text 
-# (container: https://hub.docker.com/repository/docker/cascoopman/parlementaire_vragen_structure_text/general)
 regex_data = raw_data.apply(
     "components/scraper_components/regex_pv_component",
 )
-
-print(f"{GCP_PROJECT_NAME}"+"_scrape/pv")
 
 # STEP 4: STORE THE DATA IN A GCP BUCKET
 regex_data.write(
     "write_to_file",
     arguments={
-        "path": "gs://GCPPROJECTNAME _scrape/pv",
+        "path": "gs://{GCP_PROJECT_NAME}_scrape/pv",
         "format": "parquet",
     }
 )

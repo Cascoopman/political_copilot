@@ -4,8 +4,8 @@
 
 # TODO fix this bucket not being in terraform.state
 resource "google_storage_bucket" "embeddings" {
-  name                        = "cedar-talent-417009_embed"
-  location                    = var.region
+  name                        = "${var.project}_embed"
+  location                    = "europe-west1"
   uniform_bucket_level_access = true
   versioning {
     enabled = true
@@ -80,4 +80,6 @@ resource "google_compute_network" "vertex_network" {
 }
 **/
 
-data "google_project" "project" {}
+data "google_project" "project" {
+  project_id = var.project
+}

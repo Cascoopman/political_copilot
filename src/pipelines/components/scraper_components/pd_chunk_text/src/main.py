@@ -134,7 +134,7 @@ class ChunkTextComponent(PandasTransformComponent):
         name = row["name"]
         faction = row["faction"]
         
-        docs = self.chunker.create_documents([text_data])
+        docs = RecursiveCharacterTextSplitter.create_documents([text_data])
 
         return [
             (doc_id, f"{doc_id}_{chunk_id}", chunk.page_content, card_title, download_href, profile_href, name, faction)

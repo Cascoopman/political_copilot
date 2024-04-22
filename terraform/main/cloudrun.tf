@@ -21,6 +21,26 @@ variable "svc_cloudrun_roles" {
   type        = list(string)
   default = [
     "roles/storage.objectViewer",
-    "roles/aiplatform.admin"
+    "roles/aiplatform.admin",
+    "roles/logging.logWriter",
+    "roles/artifactregistry.createOnPushWriter",
+    "roles/storage.objectAdmin",
+    "roles/storage.admin",
+    "roles/datastore.user",
+    "roles/secretmanager.secretAccessor"
+  ]
+}
+
+#    "roles/run.admin",
+#    "roles/run.invoker",
+
+# Grant myself permissions
+resource "google_project_iam_binding" "cloud_run_invoker" {
+  project = var.project
+  
+  role    = "roles/run.admin"
+
+  members = [
+    "user:cas.coopman@intern.ml6.eu",
   ]
 }
