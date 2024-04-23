@@ -70,6 +70,10 @@ def retrieve(query: str, faction: str):
     )
 
     # Query the index endpoint for the nearest neighbors.
+    # The vector search can be filter on faction and source
+    # Currently the only data in the index is from the 
+    # parliamentary debates or 'PD' source.
+    # TODO: Add new sources and make this filter variable
     resp = my_index_endpoint.find_neighbors(
         deployed_index_id=DEPLOYED_INDEX_ID,
         queries=[feature_vector],

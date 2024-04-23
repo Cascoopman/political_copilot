@@ -20,6 +20,7 @@ schema = pa.schema([
     ("embedding", pa.list_(pa.float32()))
 ])
 
+# TODO: Adjust this path!
 Path_to_parquet = "/Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts/pd_scraper/pd_scraper-20240417151652/pd_speech_extractor_component/part.0.parquet"
 table = pq.read_table(Path_to_parquet)
 
@@ -69,6 +70,7 @@ results_df = pd.DataFrame(
 
 print(results_df)
 
+# TODO: Adjust this path!
 results_df.to_parquet('/Users/cas/Documents/political_agents/data/chunked.parquet')
 
 embeddings_model = OpenAIEmbeddings(model="text-embedding-3-small",)
@@ -86,6 +88,7 @@ results_df.to_parquet('/Users/cas/Documents/political_agents/data/embedded.parqu
 import json
 import pandas as pd
 
+# TODO: Adjust this path!
 path = '/Users/cas/Documents/political_agents/data/embedded.parquet'
 
 df = pd.read_parquet(path)
@@ -120,6 +123,7 @@ def create_json_file(json_records, json_file_path):
             json.dump(record, f)
             f.write('\n')
 
+# TODO: Adjust this path!
 json_path = "/Users/cas/Documents/political_agents/data"
 
 df['embedding'] = df['embedding'].apply(lambda x: x.tolist())

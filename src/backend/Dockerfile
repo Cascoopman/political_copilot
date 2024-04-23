@@ -2,6 +2,7 @@
 FROM python:3.9-slim
 
 # Set environment variables
+# TODO: Add your GCP_PROJECT_NAME and GCP_INDEX_ENDPOINT
 ENV PORT=8080
 ENV GCP_PROJECT_NAME=//
 ENV GCP_INDEX_ENDPOINT=//
