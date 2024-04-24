@@ -1,0 +1,4 @@
+streamlit
+st-star-rating
+requests
+google-auth

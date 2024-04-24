@@ -1,24 +1,142 @@
-name: bvr_scraper
+name: pd_scraper
 services:
-  load_bvr_component:
+  pd_chunk_text:
     build:
       args: []
-      context: /Users/jensbontinck/projects/personal-work/political_copilot/src/pipelines/components/scraper_components/load_bvr_component
+      context: /Users/cas/Documents/political_agents/src/pipelines/components/scraper_components/pd_chunk_text
     command:
     - --metadata
-    - '{"base_path": "/fondant-artifacts", "pipeline_name": "bvr_scraper", "run_id":
-      "bvr_scraper-20240312115126", "component_id": "load_bvr_component", "cache_key":
-      "cb08c6ba1214d9ec3725f49af1e5c213"}'
+    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
+      "pd_scraper-20240417152701", "component_id": "pd_chunk_text", "cache_key": "e183260ef18c0c364683fb39b0819663"}'
     - --output_manifest_path
-    - /fondant-artifacts/bvr_scraper/bvr_scraper-20240312115126/load_bvr_component/manifest.json
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240417152701/pd_chunk_text/manifest.json
+    - --chunk_strategy
+    - RecursiveCharacterTextSplitter
+    - --chunk_kwargs
+    - '{"chunk_size": 512, "chunk_overlap": 40}'
     - --cache
-    - 'False'
+    - 'True'
     - --cluster_type
     - default
     - --operation_spec
-    - '{"specification": {"name": "load_bvr_component", "image": "load_bvr_component:latest",
-      "description": "Custom component to load the decisions of the flemish government"},
+    - '{"specification": {"name": "pd_chunk_text", "image": "pd_chunk_text:0.0.12",
+      "description": "Component that chunks text into smaller segments", "consumes":
+      {"text": {"type": "string"}, "card_title": {"type": "string"}, "download_href":
+      {"type": "string"}, "profile_href": {"type": "string"}, "name": {"type": "string"},
+      "faction": {"type": "string"}}, "produces": {"text": {"type": "string"}, "original_document_id":
+      {"type": "int64"}, "card_title": {"type": "string"}, "download_href": {"type":
+      "string"}, "profile_href": {"type": "string"}, "name": {"type": "string"}, "faction":
+      {"type": "string"}}, "args": {"chunk_strategy": {"description": "The strategy
+      to use for chunking the text. One of [''RecursiveCharacterTextSplitter'', ''HTMLHeaderTextSplitter'',
+      ''CharacterTextSplitter'', ''Language'', ''MarkdownHeaderTextSplitter'', ''MarkdownTextSplitter'',
+      ''SentenceTransformersTokenTextSplitter'', ''LatexTextSplitter'', ''SpacyTextSplitter'',
+      ''TokenTextSplitter'', ''NLTKTextSplitter'', ''PythonCodeTextSplitter'', ''character'',
+      ''NLTK'', ''SpaCy'']", "type": "str", "default": "RecursiveCharacterTextSplitter"},
+      "chunk_kwargs": {"description": "The arguments to pass to the chunking strategy",
+      "type": "dict", "default": {}}, "language_text_splitter": {"description": "The
+      programming language to use for splitting text into sentences if \"language\"
+      is selected as the splitter. Check  https://python.langchain.com/docs/modules/data_connection/document_transformers/code_splitter
+      for more information on supported languages.", "type": "str", "default": "None"}}},
       "consumes": {}, "produces": {}}'
+    - --input_manifest_path
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240417152701/pd_speech_extractor_component/manifest.json
+    depends_on:
+      pd_speech_extractor_component:
+        condition: service_completed_successfully
+    entrypoint:
+    - fondant
+    - execute
+    - main
+    labels:
+      pipeline_description: null
+    ports:
+    - 8787:8787
+    volumes:
+    - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
+      target: /fondant-artifacts
+      type: bind
+  pd_embed_text:
+    build:
+      args: []
+      context: /Users/cas/Documents/political_agents/src/pipelines/components/scraper_components/pd_embed_text
+    command:
+    - --metadata
+    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
+      "pd_scraper-20240417152701", "component_id": "pd_embed_text", "cache_key": "d996ea0d79dd988f60565db1c6ab5c74"}'
+    - --output_manifest_path
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240417152701/pd_embed_text/manifest.json
+    - --model_provider
+    - openai
+    - --model
+    - text-embedding-3-small
+    - --api_keys
+    - '{"OPENAI_API_KEY": "\\"}'
+    - --auth_kwargs
+    - '{}'
+    - --cache
+    - 'True'
+    - --cluster_type
+    - default
+    - --operation_spec
+    - '{"specification": {"name": "pd_embed_text", "image": "pd_embed_text:9.9.9",
+      "description": "Component that generates embeddings of text passages.", "consumes":
+      {"text": {"type": "string"}, "faction": {"type": "string"}}, "produces": {"embedding":
+      {"type": "array", "items": {"type": "float32"}}, "faction": {"type": "string"}},
+      "args": {"model_provider": {"description": "The provider of the model - corresponding
+      to langchain embedding classes. \nCurrently the following providers are supported:
+      aleph_alpha, cohere, huggingface, openai, \nvertexai.\n", "type": "str", "default":
+      "huggingface"}, "model": {"description": "The model to generate embeddings from.
+      \nChoose an available model name to pass to the model provider''s langchain
+      embedding class.\n", "type": "str", "default": "None"}, "api_keys": {"description":
+      "The API keys to use for the model provider that are written to environment
+      variables.\nPass only the keys required by the model provider or conveniently
+      pass all keys you will ever need. \nPay attention how to name the dictionary
+      keys so that they can be used by the model provider.\n", "type": "dict", "default":
+      {}}, "auth_kwargs": {"description": "Additional keyword arguments required for
+      api initialization/authentication.\n", "type": "dict", "default": {}}}}, "consumes":
+      {}, "produces": {}}'
+    - --input_manifest_path
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240417152701/pd_chunk_text/manifest.json
+    depends_on:
+      pd_chunk_text:
+        condition: service_completed_successfully
+    entrypoint:
+    - fondant
+    - execute
+    - main
+    labels:
+      pipeline_description: null
+    ports:
+    - 8787:8787
+    volumes:
+    - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
+      target: /fondant-artifacts
+      type: bind
+  pd_speech_extractor_component:
+    build:
+      args: []
+      context: /Users/cas/Documents/political_agents/src/pipelines/components/scraper_components/pd_speech_extractor_component
+    command:
+    - --metadata
+    - '{"base_path": "/fondant-artifacts", "pipeline_name": "pd_scraper", "run_id":
+      "pd_scraper-20240417152701", "component_id": "pd_speech_extractor_component",
+      "cache_key": "d87ef1b041b51332e9e542d56117ce99"}'
+    - --output_manifest_path
+    - /fondant-artifacts/pd_scraper/pd_scraper-20240417152701/pd_speech_extractor_component/manifest.json
+    - --num_pages
+    - '1'
+    - --cache
+    - 'True'
+    - --cluster_type
+    - default
+    - --operation_spec
+    - '{"specification": {"name": "pd_speech_extractor_component", "image": "pd_speech_extractor_component:0.0.1",
+      "description": "Custom component to extract all the speeches from the debates
+      on the website of the flemish government", "produces": {"card_title": {"type":
+      "string"}, "download_href": {"type": "string"}, "profile_href": {"type": "string"},
+      "faction": {"type": "string"}, "name": {"type": "string"}, "text": {"type":
+      "string"}}, "args": {"num_pages": {"description": "The number of pages to scrape",
+      "type": "int", "default": 1}}}, "consumes": {}, "produces": {}}'
     depends_on: {}
     entrypoint:
     - fondant
@@ -29,7 +147,7 @@ services:
     ports:
     - 8787:8787
     volumes:
-    - source: /Users/jensbontinck/projects/personal-work/political_copilot/src/pipelines/fondant-artifacts
+    - source: /Users/cas/Documents/political_agents/src/pipelines/fondant-artifacts
       target: /fondant-artifacts
       type: bind
 version: '3.8'

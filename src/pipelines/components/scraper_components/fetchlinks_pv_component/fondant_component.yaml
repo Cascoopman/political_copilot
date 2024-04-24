@@ -1,0 +1,25 @@
+name: fetchlink_pv_component
+description: Custom component to fetch all the links directing to the parliamentairy questions from the website of the flemish government
+image: fetchlink_pv_component:latest
+
+produces:
+  File Name: 
+    type: "string"
+  Card title: 
+    type: "string"
+  Document number: 
+    type: "string"
+  View link text: 
+    type: "string"
+  View link href: 
+    type: "string"
+  Download link text: 
+    type: "string"
+  Download link href: 
+    type: "string"
+
+args:
+  num_pages:
+    description: The number of pages to scrape
+    type: int
+    default: 1

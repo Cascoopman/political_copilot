@@ -56,3 +56,13 @@ module "vpc-network" {
   ip_range_services_name = "${local.subnetwork_name}-gke-services"
   vpc_connector          = "true"
 }
+
+/******************************************
+	        vertexai configuration
+ *****************************************/
+
+module "vertexai" {
+  source                  = "../modules/vertexai"
+  project                 = var.project
+  region                  = var.region  
+}

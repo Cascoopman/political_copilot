@@ -1,0 +1,35 @@
+name:
+  regex_pv_component
+description:
+  This container is responsible for extracting key information from the text of a Parliamentary Question.
+image:
+  regex_pv_component:latest
+
+consumes:
+  text:
+    type: "string"
+
+produces: 
+  sender:
+    type: "string"
+
+  responder:
+    type: "string"
+
+  questions:
+    type: "string"
+
+  answers:
+    type: "string"
+
+  jurisdiction:
+    type: "string"
+
+  topic:
+    type: "string"
+
+  date:
+    type: "string"
+
+  number:
+    type: "string"

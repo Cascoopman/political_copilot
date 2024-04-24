@@ -1,0 +1,4 @@
+fondant==0.11.2
+fondant[component]
+bs4
+requests

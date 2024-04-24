@@ -1,0 +1,56 @@
+name: pd_chunk_text
+description: Component that chunks text into smaller segments 
+image: pd_chunk_text:0.0.12
+
+consumes:
+  text:
+    type: string
+  card_title:
+    type: string
+  download_href:
+    type: string
+  profile_href:
+    type: string
+  name:
+    type: string
+  faction:
+    type: string
+  
+produces:
+  text:
+    type: string
+  original_document_id:
+    type: int64
+  card_title:
+    type: string
+  download_href:
+    type: string
+  profile_href:
+    type: string
+  name:
+    type: string
+  faction:
+    type: string
+
+#previous_index: original_document_id
+
+args:
+  chunk_strategy:
+    description: The strategy to use for chunking the text. One of
+            ['RecursiveCharacterTextSplitter', 'HTMLHeaderTextSplitter', 'CharacterTextSplitter',
+            'Language', 'MarkdownHeaderTextSplitter', 'MarkdownTextSplitter',
+            'SentenceTransformersTokenTextSplitter', 'LatexTextSplitter', 'SpacyTextSplitter',
+            'TokenTextSplitter', 'NLTKTextSplitter', 'PythonCodeTextSplitter', 'character',
+            'NLTK', 'SpaCy']
+    type: str
+    default: RecursiveCharacterTextSplitter
+  chunk_kwargs:
+    description: The arguments to pass to the chunking strategy
+    type: dict
+    default: {}
+  language_text_splitter:
+    description: The programming language to use for splitting text into sentences if "language"
+        is selected as the splitter. Check  https://python.langchain.com/docs/modules/data_connection/document_transformers/code_splitter
+        for more information on supported languages.
+    type: str
+    default: None

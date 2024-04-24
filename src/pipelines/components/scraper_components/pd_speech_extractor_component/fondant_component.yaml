@@ -1,0 +1,23 @@
+name: pd_speech_extractor_component
+description: Custom component to extract all the speeches from the debates on the website of the flemish government
+image: pd_speech_extractor_component:0.0.1
+
+produces:
+  card_title: 
+    type: string
+  download_href: 
+    type: string
+  profile_href:
+    type: string
+  faction:
+    type: string
+  name:
+    type: string
+  text:
+    type: string
+
+args:
+  num_pages:
+    description: The number of pages to scrape
+    type: int
+    default: 1

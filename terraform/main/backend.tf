@@ -7,7 +7,7 @@
 
 terraform {
   backend "gcs" {
-    bucket = "to-be-decided_terraform"
+    bucket = "${var.project}_terraform"
     prefix = "terraform/state"
   }
 }

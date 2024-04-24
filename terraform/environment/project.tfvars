@@ -1,3 +1,3 @@
-project = "to-be-decided"
+project = //
 region  = "europe-west1"
 zone    = "europe-west1-b"

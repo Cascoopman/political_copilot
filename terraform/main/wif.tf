@@ -1,9 +1,13 @@
 locals {
-  # To use wif with Gitlab / Github, please fill in the following local values
-  # and contribute them back to Nimbus.
-  attribute_condition = ""
-  audiences           = [""]
-  issuer_uri          = ""
+  # List of UUIDs found in the respective bitbucket repository settings under Repository UUID. Must include the curly brackets.
+  bitbucket_repo_ids  = []
+  bitbucket_workspace = "ml6team"
+}
+
+locals {
+  attribute_condition = format("assertion.repositoryUuid in %v", local.bitbucket_repo_ids)
+  audiences           = ["ari:cloud:bitbucket::workspace/e65ac0ba-0ab0-4ea9-9524-95dade9ab047"]
+  issuer_uri          = "https://api.bitbucket.org/2.0/workspaces/${local.bitbucket_workspace}/pipelines-config/identity/oidc"
 }
 
 module "wif" {
