@@ -12,7 +12,9 @@ def run_manual_debate(query, factions, chunks_dict) -> dict:
     a coalition expert will estimate the coalition partners.
     
     args:
-        chunks: dict, chunks retrieved from the index
+        query: str, the query to debate about
+        factions: list, the factions participating in the debate
+        chunks_dict: dict, chunks retrieved from the index with the faction as key
     '''
     # To disable an error
     os.environ["TOKENIZERS_PARALLELISM"] = "false"

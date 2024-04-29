@@ -26,13 +26,12 @@ gcloud ai index-endpoints deploy-index $GCP_VS_ENDPOINT \
     --display-name=political_endpoint \
     --index=$GCP_VS_INDEX \
     --min-replica-count=1 \
-    --max-replica-count=2 \
     --region=europe-west1 \
     --project=$GCP_PROJECT_NAME \
     --machine-type=e2-standard-2
 
 #deploying goes pretty fast
-echo "Deploying the backend image to Cloud Run..."
+#echo "Deploying the backend image to Cloud Run..."
 gcloud run deploy backend \
     --image europe-west1-docker.pkg.dev/$GCP_PROJECT_NAME/$GCP_PROJECT_NAME-default-repository/backend \
     --platform managed --region europe-west1 --quiet \
@@ -40,6 +39,8 @@ gcloud run deploy backend \
     --no-allow-unauthenticated \
     --ingress internal \
     --service-account svc-cloudrun@$GCP_PROJECT_NAME.iam.gserviceaccount.com
+
+cd src/frontend
 
 # Goes pretty fast
 echo "Deploying the frontend to App Engine..."

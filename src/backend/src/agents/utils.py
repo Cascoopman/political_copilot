@@ -1,4 +1,7 @@
 from autogen.agentchat.conversable_agent import ConversableAgent
+import os
+from openai import OpenAI
+import json
 
 def create_debator(llm_config, faction, message, chunks):
     '''
@@ -95,3 +98,81 @@ def create_coalition_expert(llm_config, message):
         '''
     )
     return coalition_expert
+
+def create_system_message(faction, message, chunks):
+    system_message=f'''
+            Je bent een hulpzame AI-assistent.
+            
+            Je vertegenwoordigt de politieke partij {faction} in een virtueel politiek debat.
+            
+            Het onderwerp van het debat is: {message}.
+            
+            Gebruik de onderstaande informatie en bronnen om het standpunt van de partij te formuleren.
+            
+            Het is jouw taak om het standpunt van de politiek partij {faction} te analyseren, begrijpen en vlot samen te vatten.
+            
+            Indien je gebruik maakt van een bron, zet deze tussen vierkante haken [Bron :].
+            Vermeld ook de persoon die de uitspraak heeft gedaan.
+            
+            De relevante informatie is als volgt:
+            {' '.join(chunk for chunk in chunks)}.
+            
+            Ter herhaling:
+            Vermeld zeker de naam van je partij: {faction}, en de links van de bronnen die je gebruikt tussen vierkante haken [].
+            
+            Hou je argumentatie spontaan en vlot.
+            '''
+    return system_message
+
+def normalize_message(query: str):
+    # Get OpenAI API key
+    current_directory = os.path.dirname(__file__)
+    absolute_path = os.path.abspath(os.path.join(current_directory, "OAI_CONFIG_LIST.json"))
+    with open(absolute_path, "r") as file:
+        config_list = json.load(file)
+    
+    # Send the URL to openAI
+    
+    openAI = OpenAI(api_key=config_list[0]["api_key"])
+    completion = openAI.chat.completions.create(
+        model="gpt-3.5-turbo",
+        temperature=0.2,
+        messages=[
+            {"role": "system", "content": f'''
+                Het is aan jou om de input van de gebruiker te modereren en te normaliseren.
+                Wij hebben graag een onderwerp voor een virtueel politiek debat.
+                De gebruiker kan dit kiezen, maar het moet wel neutraal en respectvol zijn.
+                
+                Jij moet dus de input omzetten naar een neutraal, relevant, concreet en algemeen debatsonderwerp.
+                Maak van korte zinnen een volledige zin.
+                Maak van lange zinnen een coherent onderwerp.
+                Zet andere talen om in het Nederlands.
+                Alle onderwerpen mogen besproken worden, maar insunuerende, beledigende of ongepaste taal zet je om naar een neutrale en respectvolle formulering. 
+                Input zoals 'randon', 'test', 'verras me', 'as;dfasdf' enzovoort mag je creatief omzetten naar een relevant debatsonderwerp.
+                
+                Bijvoorbeeld:
+                "Walen uit Belgie" wordt "De onafhankelijkheid van Wallonië ten opzichte van België".
+                "nazi's zijn hip" wordt "De opkomst van het nazisme in de jaren 30".
+                "The unemployed should be put to work" wordt "Het activeren van werklozen".
+                "Er is zojuist een atoombom gevallen" wordt "De gevolgen van een nucleaire aanval".
+                "Abortus is hetzelfde als kinderen doden" wordt "De legalisatie van abortus".
+                "Les politici sont des voleurs" wordt "De rol van politici in de samenleving".
+                "Hoe lossen de partijen het begrotingstekort op" wordt "Aanpakken van het begrotingstekort".
+                "Beloftes nakomen" wordt "De rol van politici in de samenleving".
+                "Er moet een migratiestop komen" wordt "De migratieproblematiek en migratiestop".
+                "Hoe gaan de partijen de stijgende kosten oplossen" wordt "Aanpakken van de stijgende kosten".
+                "intelectual property tax advantage voor IT sector" wordt "De belastingvoordelen voor de IT-sector".
+                "Ik vraag me echt al een lange tijd af waarom die politiekers zoveel geld verdienen. Die maken veel beloftes en komen ze niet na, waarom betalen we die." wordt "De verloning van politici".
+                "Een chatbot dat het parlement vervangt, alle ministers en overheid instanties worden vervangen waar dat mogelijk is" wordt "Het automatiseren en digitaliseren van de overheid".
+                
+                De gebruiker input is als volgt:
+                {query}
+                
+                Geef enkel het onderwerp van het debat terug, geen andere output.
+                '''
+                }
+            ]
+    )
+    normalized_message = completion.choices[0].message.content
+    print(repr(normalized_message))
+    return normalized_message

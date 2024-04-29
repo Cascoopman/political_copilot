@@ -4,6 +4,10 @@ uvicorn
 openai
 google.cloud.storage
 google.cloud.aiplatform
+google.cloud.firestore
 pandas
 pyarrow
 pyautogen
+beautifulsoup4
+requests
+urllib3
