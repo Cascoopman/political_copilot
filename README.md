@@ -24,7 +24,6 @@ Which brings us to the agents. You can add [tools or orchestration methods](http
 Before you can deploy this system, make sure to first setup the Vector Search, the backend and the frontend. To actually deploy or undeploy the system, run the deploy and undeploy scripts. Be sure to first set your $GCP_PROJECT_NAME, $GCP_VS_INDEX and $GCP_VS_ENDPOINT variables.
 
 ## Architecture
-Excalidraw link: https://excalidraw.com/#room=fd1249eeae9767cd4ba5,_r7YsTSTZlldzadTgBR0lQ
 ![image](https://github.com/jBontinck/political_copilot/assets/58267444/df9b698d-98e9-47fd-a0e1-30b4b8fb3880)
 
 
