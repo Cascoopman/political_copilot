@@ -29,5 +29,5 @@ Excalidraw link: https://excalidraw.com/#room=fd1249eeae9767cd4ba5,_r7YsTSTZlldz
 
 
 _For questions or feedback, contact us at:_
-_jensbontinck@gmail.com_ or
+_jensbontinck@gmail.com_ and
 _cascoopman@hotmail.com_
