@@ -25,7 +25,7 @@ This tool depends heavily on the quality and amount of data it is fed. You can a
 
 Which brings us to the agents. You can add [tools or orchestration methods](https://github.com/jBontinck/political_copilot/tree/main/src/backend/src).
 
-## Codebase
+## Codebase 
 Before you can deploy this system, make sure to first setup the Vector Search, the backend and the frontend. To actually deploy or undeploy the system, run the deploy and undeploy scripts. Be sure to first set your $GCP_PROJECT_NAME, $GCP_VS_INDEX and $GCP_VS_ENDPOINT variables.
 
 ## Architecture
