@@ -10,7 +10,7 @@ google.cloud.storage==2.14.0
 google.cloud.aiplatform==1.46.0
 pandas==2.1.4
 pyarrow==15.0.2
-pyautogen==0.2.14
+ag2==0.2.14
 st-star-rating==0.0.6
 streamlit==1.33.0
 requests==2.31.0
