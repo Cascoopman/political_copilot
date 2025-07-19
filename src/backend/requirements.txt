@@ -7,7 +7,7 @@ google.cloud.aiplatform
 google.cloud.firestore
 pandas
 pyarrow
-pyautogen
+ag2
 beautifulsoup4
 requests
 urllib3
